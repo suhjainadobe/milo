@@ -140,7 +140,7 @@ const eagerLoad = (img) => {
 
 (async function loadLCPImage() {
   const firstDiv = document.querySelector('body > main > div:nth-child(1) > div');
-  if (firstDiv?.classList.contains('marquee')) {
+  if (firstDiv?.classList.contains('marquee') || firstDiv?.classList.contains('change-bg')) {
     firstDiv.querySelectorAll('img').forEach(eagerLoad);
   } else {
     eagerLoad(document.querySelector('img'));
