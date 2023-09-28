@@ -110,7 +110,7 @@ async function createConfig(el) {
 
 export default async function init(el) {
   const clone = el.cloneNode(true);
-  import(`${base}/deps/interactivemarquee.js`);
+  import(`${base}/deps/interactive-marquee/ft-everyonechangebgmarquee-41eebb1a.js`);
   el.innerText = '';
   el.appendChild(customElem);
   createConfig(clone);

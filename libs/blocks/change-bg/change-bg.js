@@ -160,7 +160,7 @@ function getAssests() {
 export default function init(el) {
   console.log('init')
   const clone = el.cloneNode(true);
-  import(`${base}/deps/interactivemarquee.js`);
+  import(`${base}/deps/interactive-marquee/ft-everyonechangebgmarquee-41eebb1a.js`);
   getAssests(clone);
   el.innerText = '';
   el.appendChild(customElem);
