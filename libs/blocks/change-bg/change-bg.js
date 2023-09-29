@@ -158,9 +158,11 @@ function getAssests() {
 }
 
 export default function init(el) {
-  console.log('init')
-  const clone = el.cloneNode(true);
+  console.log('init', el)
 
+  fetch(`${base}/assets/mobile/defaultBg.webp`)
+
+  const clone = el.cloneNode(true);
   window.__satelliteLoadedPromise = Promise.resolve(false);
 
   import(`${base}/deps/interactive-marquee/ft-everyonechangebgmarquee-41eebb1a.js`);
