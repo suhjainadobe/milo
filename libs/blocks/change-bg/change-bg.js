@@ -158,18 +158,14 @@ function getAssests() {
 }
 
 export default function init(el) {
-  console.log('init', el)
-
-  // fetch(`${base}/assets/mobile/defaultBg.webp`)
-  const img = new Image();
-  img.fetchPriority = "high";
-  img.src = `${base}/assets/mobile/defaultBg.webp`;
-
-  const clone = el.cloneNode(true);
-  window.__satelliteLoadedPromise = Promise.resolve(false);
+  // prefetch the mobile background image
+  if (matchMedia(`screen and (max-width: 599px)`).matches) {
+    const img = new Image();
+    img.fetchPriority = "high";
+    img.src = `${base}/assets/mobile/defaultBg.webp`;
+  }
 
   import(`${base}/deps/interactive-marquee/ft-everyonechangebgmarquee-37df0239.js`);
-  getAssests(clone);
-  el.innerText = '';
-  el.appendChild(customElem);
+  getAssests();
+  el.replaceChildren(customElem);
 }
