@@ -160,7 +160,10 @@ function getAssests() {
 export default function init(el) {
   console.log('init', el)
 
-  fetch(`${base}/assets/mobile/defaultBg.webp`)
+  // fetch(`${base}/assets/mobile/defaultBg.webp`)
+  const img = new Image();
+  img.fetchPriority = "high";
+  img.src = `${base}/assets/mobile/defaultBg.webp`;
 
   const clone = el.cloneNode(true);
   window.__satelliteLoadedPromise = Promise.resolve(false);
