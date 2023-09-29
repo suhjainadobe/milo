@@ -168,7 +168,7 @@ export default function init(el) {
   const clone = el.cloneNode(true);
   window.__satelliteLoadedPromise = Promise.resolve(false);
 
-  import(`${base}/deps/interactive-marquee/ft-everyonechangebgmarquee-41eebb1a.js`);
+  import(`${base}/deps/interactive-marquee/ft-everyonechangebgmarquee-37df0239.js`);
   getAssests(clone);
   el.innerText = '';
   el.appendChild(customElem);
