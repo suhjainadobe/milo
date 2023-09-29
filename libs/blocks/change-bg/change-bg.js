@@ -1,6 +1,7 @@
-import { getConfig } from '../../utils/utils.js';
-const config = getConfig();
-const base = config.codeRoot;
+// import { getConfig } from '../../utils/utils.js';
+// const config = getConfig();
+// const base = config.codeRoot;
+const base = `${window.location.origin}/libs`;
 const assetsRoot = `${base}/assets/interactive-marquee-changebg`;
 const customElem = document.createElement('ft-changebackgroundmarquee');
 
