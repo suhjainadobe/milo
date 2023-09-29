@@ -24,15 +24,15 @@ function getAssests() {
           options: [
             {
               src: `${assetsRoot}/desktop/photo1.webp`,
-              swatchSrc: `${assetsRoot}/photo-submenu-1.png`
+              swatchSrc: `${assetsRoot}/photo-submenu-1.webp`
             },
             {
               src: `${assetsRoot}/desktop/photo2.webp`,
-              swatchSrc: `${assetsRoot}/photo-submenu-2.png`
+              swatchSrc: `${assetsRoot}/photo-submenu-2.webp`
             },
             {
               src: `${assetsRoot}/desktop/photo3.webp`,
-              swatchSrc: `${assetsRoot}/photo-submenu-3.png`
+              swatchSrc: `${assetsRoot}/photo-submenu-3.webp`
             }
           ]
         },
@@ -57,15 +57,15 @@ function getAssests() {
           options: [
             {
               src: `${assetsRoot}/desktop/pattern1.webp`,
-              swatchSrc: `${assetsRoot}/pattern-submenu-1.png`
+              swatchSrc: `${assetsRoot}/pattern-submenu-1.webp`
             },
             {
               src: `${assetsRoot}/desktop/pattern2.webp`,
-              swatchSrc: `${assetsRoot}/pattern-submenu-2.png`
+              swatchSrc: `${assetsRoot}/pattern-submenu-2.webp`
             },
             {
               src: `${assetsRoot}/desktop/pattern3.webp`,
-              swatchSrc: `${assetsRoot}/pattern-submenu-3.png`
+              swatchSrc: `${assetsRoot}/pattern-submenu-3.webp`
             }
           ]
         }
@@ -88,7 +88,7 @@ function getAssests() {
           options: [
             {
               src: `${assetsRoot}/tablet/photo1.webp`,
-              swatchSrc: `${assetsRoot}/photo-submenu-1.png`
+              swatchSrc: `${assetsRoot}/photo-submenu-1.webp`
             }
           ]
         },
@@ -107,7 +107,7 @@ function getAssests() {
           options: [
             {
               src: `${assetsRoot}/tablet/pattern1.webp`,
-              swatchSrc: `${assetsRoot}/pattern-submenu-1.png`
+              swatchSrc: `${assetsRoot}/pattern-submenu-1.webp`
             }
           ]
         }
@@ -130,7 +130,7 @@ function getAssests() {
           options: [
             {
               src: `${assetsRoot}/mobile/photo1.webp`,
-              swatchSrc: `${assetsRoot}/photo-submenu-1.png`
+              swatchSrc: `${assetsRoot}/photo-submenu-1.webp`
             }
           ]
         },
@@ -149,7 +149,7 @@ function getAssests() {
           options: [
             {
               src: `${assetsRoot}/mobile/pattern1.webp`,
-              swatchSrc: `${assetsRoot}/pattern-submenu-1.png`
+              swatchSrc: `${assetsRoot}/pattern-submenu-1.webp`
             }
           ]
         }
