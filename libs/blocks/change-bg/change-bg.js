@@ -167,7 +167,7 @@ export default function init(el) {
     img.src = `${assetsRoot}/mobile/defaultBg.webp`;
   }
 
-  import(`${base}/deps/interactive-marquee-changebg/ft-everyonechangebgmarquee-37df0239.js`);
+  import(`${base}/deps/interactive-marquee-changebg/ft-everyonechangebgmarquee-8e121e97.js`);
   getAssests();
   el.replaceChildren(customElem);
 }
