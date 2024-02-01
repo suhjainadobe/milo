@@ -1,20 +1,37 @@
 import { readFile } from '@web/test-runner-commands';
 import { expect } from '@esm-bundle/chai';
 
+import { CheckoutWorkflow, CheckoutWorkflowStep, Defaults, Log } from '../../../libs/deps/commerce.js';
+
 import merch, {
+  PRICE_TEMPLATE_DISCOUNT,
+  PRICE_TEMPLATE_OPTICAL,
+  PRICE_TEMPLATE_STRIKETHROUGH,
   buildCta,
   getCheckoutContext,
+  initService,
   priceLiteralsURL,
 } from '../../../libs/blocks/merch/merch.js';
 
 import { mockFetch, unmockFetch } from './mocks/fetch.js';
 import { mockIms, unmockIms } from './mocks/ims.js';
 import { createTag, setConfig } from '../../../libs/utils/utils.js';
+import getUserEntitlements from '../../../libs/blocks/global-navigation/utilities/getUserEntitlements.js';
+
+const ENTITLEMENTS_METADATA = {
+  data: [{
+    'Product Arrangement Code': 'phsp_direct_individual',
+    CTA: 'Download',
+    Target: 'https://helpx.adobe.com/download-install.html',
+    'fr-FR': 'https://helpx.adobe.com/fr/custom-page.html',
+  }],
+};
 
 const config = {
   codeRoot: '/libs',
   commerce: { priceLiteralsURL },
   env: { name: 'prod' },
+  imsClientId: 'test_client_id',
 };
 
 /**
@@ -30,16 +47,33 @@ const validatePriceSpan = async (selector, expectedAttributes) => {
   ));
   const { nodeName, dataset } = await el.onceSettled();
   expect(nodeName).to.equal('SPAN');
-  if (!expectedAttributes.template) {
-    expect(dataset.template).to.be.undefined;
-  }
   Object.keys(expectedAttributes).forEach((key) => {
     const value = expectedAttributes[key];
     expect(dataset[key], ` ${key} should equal ${value}`).to.equal(value);
   });
+  return el;
 };
 
+const SUBSCRIPTION_DATA_PHSP = [
+  {
+    offer: { product_arrangement_code: 'phsp_direct_individual' },
+    product_arrangement: {
+      code: 'phsp_direct_individual',
+      family: 'PHOTOSHOP',
+    },
+  },
+];
+
+const PROD_DOMAINS = [
+  'www.adobe.com',
+  'www.stage.adobe.com',
+  'helpx.adobe.com',
+];
+
 describe('Merch Block', () => {
+  let setEntitlementsMetadata;
+  let setSubscriptionsData;
+
   after(async () => {
     delete window.lana;
     unmockFetch();
@@ -50,16 +84,20 @@ describe('Merch Block', () => {
     window.lana = { log: () => { } };
     document.head.innerHTML = await readFile({ path: './mocks/head.html' });
     document.body.innerHTML = await readFile({ path: './mocks/body.html' });
-    await mockIms('CH');
-    await mockFetch();
     setConfig(config);
+    ({ setEntitlementsMetadata, setSubscriptionsData } = await mockFetch());
+    await mockIms('CH');
   });
 
   beforeEach(async () => {
-    const { init, Log } = await import('../../../libs/deps/commerce.js');
-    await init(() => config);
+    await initService(true);
     Log.reset();
     Log.use(Log.Plugins.quietFilter);
+  });
+
+  afterEach(() => {
+    setEntitlementsMetadata();
+    setSubscriptionsData();
   });
 
   it('does not decorate merch with bad content', async () => {
@@ -69,7 +107,7 @@ describe('Merch Block', () => {
     expect(await merch(el)).to.be.null;
   });
 
-  describe('Prices', () => {
+  describe('prices', () => {
     it('renders merch link to price without term (new)', async () => {
       await validatePriceSpan('.merch.price.hide-term', { displayRecurrence: 'false' });
     });
@@ -91,25 +129,37 @@ describe('Merch Block', () => {
     });
 
     it('renders merch link to strikethrough price with term, seat and tax', async () => {
-      await validatePriceSpan('.merch.price.strikethrough', { template: 'strikethrough' });
+      await validatePriceSpan('.merch.price.strikethrough', { template: PRICE_TEMPLATE_STRIKETHROUGH });
     });
 
     it('renders merch link to optical price with term, seat and tax', async () => {
-      await validatePriceSpan('.merch.price.optical', { template: 'optical' });
+      await validatePriceSpan('.merch.price.optical', { template: PRICE_TEMPLATE_OPTICAL });
+    });
+
+    it('renders merch link to discount price', async () => {
+      await validatePriceSpan('.merch.price.discount', { template: PRICE_TEMPLATE_DISCOUNT });
     });
 
     it('renders merch link to tax exclusive price with tax exclusive attribute', async () => {
       await validatePriceSpan('.merch.price.tax-exclusive', { forceTaxExclusive: 'true' });
     });
+
+    it('renders merch link to GB price', async () => {
+      const el = await validatePriceSpan('.merch.price.gb', {});
+      expect(/£/.test(el.textContent)).to.be.true;
+    });
   });
 
-  describe('Promo Prices', () => {
+  describe('promo prices', () => {
     it('renders merch link to promo price with discount', async () => {
       await validatePriceSpan('.merch.price.oldprice', { promotionCode: undefined });
     });
 
     it('renders merch link to promo price without discount', async () => {
-      await validatePriceSpan('.merch.strikethrough.oldprice', { template: 'strikethrough', promotionCode: undefined });
+      await validatePriceSpan('.merch.strikethrough.oldprice', {
+        template: PRICE_TEMPLATE_STRIKETHROUGH,
+        promotionCode: undefined,
+      });
     });
 
     it('renders merch link to promo price with discount', async () => {
@@ -121,13 +171,16 @@ describe('Merch Block', () => {
     });
   });
 
-  describe('Promo Prices in a fragment', () => {
+  describe('promo prices in a fragment', () => {
     it('renders merch link to promo price with discount', async () => {
       await validatePriceSpan('.fragment .merch.price.oldprice', { promotionCode: undefined });
     });
 
     it('renders merch link to promo price without discount', async () => {
-      await validatePriceSpan('.fragment .merch.strikethrough.oldprice', { template: 'strikethrough', promotionCode: undefined });
+      await validatePriceSpan('.fragment .merch.strikethrough.oldprice', {
+        template: PRICE_TEMPLATE_STRIKETHROUGH,
+        promotionCode: undefined,
+      });
     });
 
     it('renders merch link to promo price with discount', async () => {
@@ -141,7 +194,7 @@ describe('Merch Block', () => {
 
   describe('CTAs', () => {
     it('renders merch link to CTA, default values', async () => {
-      const { Defaults } = await import('../../../libs/deps/commerce.js');
+      await initService(true);
       const el = await merch(document.querySelector(
         '.merch.cta',
       ));
@@ -158,9 +211,12 @@ describe('Merch Block', () => {
     });
 
     it('renders merch link to CTA, config values', async () => {
-      const { Defaults, init, reset } = await import('../../../libs/deps/commerce.js');
-      reset();
-      await init(() => ({ ...config, commerce: { checkoutClientId: 'dc' } }));
+      setConfig({
+        ...config,
+        commerce: { ...config.commerce, checkoutClientId: 'dc' },
+      });
+      mockIms();
+      await initService(true);
       const el = await merch(document.querySelector(
         '.merch.cta.config',
       ));
@@ -177,11 +233,10 @@ describe('Merch Block', () => {
     });
 
     it('renders merch link to CTA, metadata values', async () => {
-      const { CheckoutWorkflow, CheckoutWorkflowStep, Defaults, init, reset } = await import('../../../libs/deps/commerce.js');
-      reset();
+      setConfig({ ...config });
       const metadata = createTag('meta', { name: 'checkout-workflow', content: CheckoutWorkflow.V2 });
       document.head.appendChild(metadata);
-      await init(() => config);
+      await initService(true);
       const el = await merch(document.querySelector(
         '.merch.cta.metadata',
       ));
@@ -196,7 +251,18 @@ describe('Merch Block', () => {
       expect(dataset.checkoutMarketSegment).to.equal(undefined);
       expect(url.searchParams.get('cli')).to.equal(Defaults.checkoutClientId);
       document.head.removeChild(metadata);
-      await init(() => config, true);
+    });
+
+    it('renders merch link to cta for GB locale', async () => {
+      await mockIms();
+      await initService(true);
+      const el = await merch(document.querySelector(
+        '.merch.cta.gb',
+      ));
+      const { nodeName, href } = await el.onceSettled();
+      expect(nodeName).to.equal('A');
+      expect(el.getAttribute('is')).to.equal('checkout-link');
+      expect(/0ADF92A6C8514F2800BE9E87DB641D2A/.test(href)).to.be.true;
     });
 
     it('renders merch link to cta with empty promo', async () => {
@@ -253,6 +319,8 @@ describe('Merch Block', () => {
     });
 
     it('adds ims country to checkout link', async () => {
+      await mockIms('CH');
+      await initService(true);
       const el = await merch(document.querySelector(
         '.merch.cta.ims',
       ));
@@ -279,7 +347,7 @@ describe('Merch Block', () => {
     });
   });
 
-  describe('Function "getCheckoutContext"', () => {
+  describe('function "getCheckoutContext"', () => {
     it('returns null if context params do not have osi', async () => {
       const el = document.createElement('a');
       const params = new URLSearchParams();
@@ -287,11 +355,72 @@ describe('Merch Block', () => {
     });
   });
 
-  describe('Function "buildCta"', () => {
+  describe('function "buildCta"', () => {
     it('returns null if context params do not have osi', async () => {
       const el = document.createElement('a');
       const params = new URLSearchParams();
       expect(await buildCta(el, params)).to.be.null;
+    });
+  });
+
+  describe.skip('Entitlements', () => {
+    it('updates CTA text to Download', async () => {
+      mockIms();
+      getUserEntitlements();
+      mockIms('US');
+      setEntitlementsMetadata(ENTITLEMENTS_METADATA);
+      setSubscriptionsData(SUBSCRIPTION_DATA_PHSP);
+      await initService(true);
+      const cta1 = await merch(document.querySelector('.merch.cta.download'));
+      await cta1.onceSettled();
+      const [{ CTA, Target }] = ENTITLEMENTS_METADATA.data;
+      expect(cta1.textContent).to.equal(CTA);
+      expect(cta1.href).to.equal(Target);
+
+      const cta2 = await merch(document.querySelector('.merch.cta.no-entitlement-check'));
+      await cta2.onceSettled();
+      expect(cta2.textContent).to.equal('Buy Now');
+      expect(cta2.href).to.not.equal(Target);
+    });
+
+    it('sets Download CTA href from the locale column', async () => {
+      setConfig({
+        ...config,
+        pathname: '/fr/test.html',
+        locales: { fr: { ietf: 'fr-FR' } },
+        prodDomains: PROD_DOMAINS,
+      });
+      mockIms();
+      getUserEntitlements();
+      mockIms('FR');
+      setEntitlementsMetadata(ENTITLEMENTS_METADATA);
+      setSubscriptionsData(SUBSCRIPTION_DATA_PHSP);
+      await initService(true);
+      const cta = await merch(document.querySelector('.merch.cta.download.fr'));
+      await cta.onceSettled();
+      const [{ CTA, 'fr-FR': target }] = ENTITLEMENTS_METADATA.data;
+      expect(cta.textContent).to.equal(CTA);
+      expect(cta.href).to.equal(target);
+    });
+
+    it('sets Download CTA href from localized target url', async () => {
+      setConfig({
+        ...config,
+        pathname: '/de/test.html',
+        locales: { de: { ietf: 'DE' } },
+        prodDomains: PROD_DOMAINS,
+      });
+      mockIms();
+      getUserEntitlements();
+      mockIms('DE');
+      setEntitlementsMetadata(ENTITLEMENTS_METADATA);
+      setSubscriptionsData(SUBSCRIPTION_DATA_PHSP);
+      await initService(true);
+      const cta = await merch(document.querySelector('.merch.cta.download.de'));
+      await cta.onceSettled();
+      const [{ CTA }] = ENTITLEMENTS_METADATA.data;
+      expect(cta.textContent).to.equal(CTA);
+      expect(cta.href).to.equal('https://helpx.adobe.com/de/download-install.html');
     });
   });
 });

@@ -7,12 +7,22 @@ span[data-wcs-osi] {
   display: inline-block;
 }
 
-span.placeholder-resolved[data-template="priceStrikethrough"], span.price.price-strikethrough {
+span.placeholder-resolved[data-template="strikethrough"], span.price.price-strikethrough {
   text-decoration: line-through;
 }
 
 .placeholder-resolved[data-wcs-osi] {
   visibility: inherit;
+}
+
+a[is='checkout-link'] > span {
+  display: inline-block;
+  text-align: center;
+  min-width: 66px;
+}
+
+a[is='checkout-link'].loading-entitlements > span {
+  opacity: 0;
 }
 
 .price-unit-type:not(.disabled)::before,

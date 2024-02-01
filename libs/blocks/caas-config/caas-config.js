@@ -20,6 +20,8 @@ import {
   decodeCompressedString,
   defaultState,
   initCaas,
+  isValidHtmlUrl,
+  isValidUuid,
   loadCaasFiles,
   loadCaasTags,
   loadStrings,
@@ -40,8 +42,6 @@ const updateObj = (obj, defaultObj) => {
   });
   return obj;
 };
-
-const isValidUuid = (id) => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
 
 const getHashConfig = async () => {
   const { hash } = window.location;
@@ -108,6 +108,10 @@ const defaultOptions = {
       '14257-chimera.adobeioruntime.net/api/v1/web/chimera-0.0.1/collection',
     '14257-chimera-stage.adobeioruntime.net/api/v1/web/chimera-0.0.1/collection':
       '14257-chimera-stage.adobeioruntime.net/api/v1/web/chimera-0.0.1/collection',
+    '14257-chimera-dev.adobeioruntime.net/api/v1/web/chimera-0.0.1/collection':
+      '14257-chimera-dev.adobeioruntime.net/api/v1/web/chimera-0.0.1/collection',
+    '14257-chimera-feature.adobeioruntime.net/api/v1/web/chimera-0.0.1/collection':
+      '14257-chimera-feature.adobeioruntime.net/api/v1/web/chimera-0.0.1/collection',
   },
   filterBuildPanel: {
     automatic: 'Automatic',
@@ -185,6 +189,7 @@ const defaultOptions = {
     milo: 'Milo',
     northstar: 'Northstar',
     workfront: 'Workfront',
+    'bacom-blog': 'Bacom Blog',
   },
   tagsUrl: 'https://www.adobe.com/chimera-api/tags',
   titleHeadingLevel: {
@@ -388,6 +393,10 @@ const TagsPanel = ({ tagsData }) => {
     });
   };
 
+  const secondarySourcePanel = html`
+    <${DropdownSelect} options=${defaultOptions.source} prop="secondarySource" label="Secondary Source" />
+    <${DropdownSelect} options=${contentTypeTags} prop="secondaryTags" label="Secondary Content Type Tags" />`;
+
   return html`
     <${DropdownSelect}
       options=${contentTypeTags}
@@ -421,12 +430,12 @@ const TagsPanel = ({ tagsData }) => {
       <${TagSelect} id="orTags" options=${allTags} label="Tags"
     /><//>
     <${MultiField}
-    onChange=${onLogicTagChange('notLogicTags')}
-    className="notLogicTags"
-    values=${context.state.notLogicTags}
-    title="NOT logic Tags"
-    subTitle=""
-  >
+      onChange=${onLogicTagChange('notLogicTags')}
+      className="notLogicTags"
+      values=${context.state.notLogicTags}
+      title="NOT logic Tags"
+      subTitle=""
+    >
     <${FormSelect}
       label="Intra Tag Logic"
       name="intraTagLogicExclude"
@@ -434,6 +443,9 @@ const TagsPanel = ({ tagsData }) => {
     />
     <${TagSelect} id="notTags" options=${allTags} label="Tags"
   /><//>
+    <label>Advanced Tag Configurations</label>
+    <${Input} label="Use a secondary source for some content types" prop="showSecondarySource" type="checkbox" />
+    ${context.state.showSecondarySource && secondarySourcePanel}
   `;
 };
 
@@ -456,9 +468,9 @@ const CardsPanel = ({ tagsData }) => {
       className="featuredCards"
       values=${context.state.featuredCards}
       title="Featured Cards"
-      subTitle="UUIDs for featured cards"
+      subTitle="URLS or UUIDs for featured cards"
     >
-      <${FormInput} name="contentId" onValidate=${isValidUuid} />
+      <${FormInput} name="contentId" onValidate=${(value) => isValidHtmlUrl(value) || isValidUuid(value)} />
     <//>
     <${MultiField}
       onChange=${onChange('excludedCards')}
@@ -1047,7 +1059,6 @@ export {
   init as default,
   cloneObj,
   getHashConfig,
-  isValidUuid,
   loadCaasTags,
   updateObj,
 };

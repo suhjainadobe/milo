@@ -1,10 +1,19 @@
-import { getConfig, loadScript } from '../../utils/utils.js';
+import { getConfig, loadScript, localizeLink } from '../../utils/utils.js';
+import { replaceKey } from '../../features/placeholders.js';
 
 export const priceLiteralsURL = 'https://milo.adobe.com/libs/commerce/price-literals.json';
+export const entitlementsURL = 'https://milo.adobe.com/libs/commerce/entitlements.json?limit=2000';
 
-export async function polyfills() {
-  if (polyfills.done) return;
-  polyfills.done = true;
+export const PRICE_TEMPLATE_DISCOUNT = 'discount';
+export const PRICE_TEMPLATE_OPTICAL = 'optical';
+export const PRICE_TEMPLATE_REGULAR = 'price';
+export const PRICE_TEMPLATE_STRIKETHROUGH = 'strikethrough';
+
+const TITLE_PRODUCT_ARRANGEMENT_CODE = 'Product Arrangement Code';
+const LOADING_ENTITLEMENTS = 'loading-entitlements';
+
+export function polyfills() {
+  if (polyfills.promise) return polyfills.promise;
   let isSupported = false;
   document.createElement('div', {
     // eslint-disable-next-line getter-return
@@ -12,21 +21,70 @@ export async function polyfills() {
       isSupported = true;
     },
   });
-  /* c8 ignore start */
-  if (!isSupported) {
+  if (isSupported) {
+    polyfills.promise = Promise.resolve();
+  } else {
     const { codeRoot, miloLibs } = getConfig();
     const base = miloLibs || codeRoot;
-    await loadScript(`${base}/deps/custom-elements.js`);
+    polyfills.promise = loadScript(`${base}/deps/custom-elements.js`);
   }
-  /* c8 ignore stop */
+  return polyfills.promise;
 }
 
-export async function initService() {
-  const commerce = await import('../../deps/commerce.js');
-  return commerce.init(() => ({
-    ...getConfig(),
-    commerce: { priceLiteralsURL },
-  }));
+export async function loadEntitlements() {
+  loadEntitlements.promise = loadEntitlements.promise ?? Promise.all([
+    import('../global-navigation/utilities/getUserEntitlements.js'),
+    fetch(entitlementsURL),
+  ]).then(([{ default: getUserEntitlements }, mappings]) => {
+    if (!mappings.ok) return [];
+    return Promise.all([getUserEntitlements(), mappings.json()]);
+  });
+  return loadEntitlements.promise;
+}
+
+async function getCheckoutAction(offers) {
+  const [{ arrangement_codes: aCodes } = {}, entitlementsMappings] = await loadEntitlements();
+  if (aCodes === undefined) return undefined;
+  const [{ productArrangementCode }] = offers;
+  if (aCodes[productArrangementCode] === true) {
+    const mapping = entitlementsMappings.data
+      ?.find(({ [TITLE_PRODUCT_ARRANGEMENT_CODE]: code }) => code === productArrangementCode);
+    if (!mapping) return undefined;
+    const config = getConfig();
+    const { locale: { ietf } } = config;
+    const text = await replaceKey(mapping.CTA, config);
+    const url = mapping[ietf] || localizeLink(mapping.Target);
+    return { text, url };
+  }
+  return undefined;
+}
+
+/**
+ * Activates commerce service and returns a promise resolving to its ready-to-use instance.
+ */
+export async function initService(force = false) {
+  if (force) {
+    initService.promise = undefined;
+    loadEntitlements.promise = undefined;
+  }
+  initService.promise = initService.promise ?? polyfills().then(async () => {
+    // loadIms();
+    const commerceLib = await import('../../deps/commerce.js');
+    const { env, commerce = {}, locale } = getConfig();
+    commerce.priceLiteralsURL = priceLiteralsURL;
+    const service = await commerceLib.init(() => ({
+      env,
+      commerce,
+      locale,
+    }), () => ({ getCheckoutAction, force }));
+    service.imsSignedInPromise.then((isSignedIn) => {
+      if (isSignedIn) {
+        loadEntitlements();
+      }
+    });
+    return service;
+  });
+  return initService.promise;
 }
 
 export async function getCommerceContext(el, params) {
@@ -34,7 +92,7 @@ export async function getCommerceContext(el, params) {
   if (!wcsOsi) return null;
   const perpetual = params.get('perp') === 'true' || undefined;
   const promotionCode = (
-    params.get('promo') ?? el.closest('[data-promotion-code]')?.dataset.promotionCode
+    params.get('promo') ?? params.get('promotionCode') ?? el.closest('[data-promotion-code]')?.dataset.promotionCode
   ) || undefined;
   return { promotionCode, perpetual, wcsOsi };
 }
@@ -58,12 +116,14 @@ export async function getCheckoutContext(el, params) {
   const checkoutMarketSegment = params.get('marketSegment');
   const checkoutWorkflow = params.get('workflow') ?? settings.checkoutWorkflow;
   const checkoutWorkflowStep = params?.get('workflowStep') ?? settings.checkoutWorkflowStep;
+  const entitlement = 'false' ?? params?.get('entitlement'); // temporarly disabled.
   return {
     ...context,
     checkoutClientId,
     checkoutWorkflow,
     checkoutWorkflowStep,
     checkoutMarketSegment,
+    entitlement,
   };
 }
 
@@ -75,8 +135,24 @@ export async function getPriceContext(el, params) {
   const displayRecurrence = params.get('term');
   const displayTax = params.get('tax');
   const forceTaxExclusive = params.get('exclusive');
-  const type = params.get('type');
-  const template = type === 'price' ? undefined : type;
+  let template = PRICE_TEMPLATE_REGULAR;
+  // This mapping also supports legacy OST links
+  switch (params.get('type')) {
+    case PRICE_TEMPLATE_DISCOUNT:
+    case 'priceDiscount':
+      template = PRICE_TEMPLATE_DISCOUNT;
+      break;
+    case PRICE_TEMPLATE_OPTICAL:
+    case 'priceOptical':
+      template = PRICE_TEMPLATE_OPTICAL;
+      break;
+    case PRICE_TEMPLATE_STRIKETHROUGH:
+    case 'priceStrikethrough':
+      template = PRICE_TEMPLATE_STRIKETHROUGH;
+      break;
+    default:
+      break;
+  }
   return {
     ...context,
     displayOldPrice,
@@ -93,20 +169,22 @@ export async function buildCta(el, params) {
   const strong = el.firstElementChild?.tagName === 'STRONG' || el.parentElement?.tagName === 'STRONG';
   const context = await getCheckoutContext(el, params);
   if (!context) return null;
-  await polyfills();
   const service = await initService();
   const text = el.textContent?.replace(/^CTA +/, '');
   const cta = service.createCheckoutLink(context, text);
   cta.classList.add('con-button');
   cta.classList.toggle('button-l', large);
   cta.classList.toggle('blue', strong);
+  if (context.entitlement !== 'false') {
+    cta.classList.add(LOADING_ENTITLEMENTS);
+    cta.onceSettled().finally(() => cta.classList.remove(LOADING_ENTITLEMENTS));
+  }
   return cta;
 }
 
 async function buildPrice(el, params) {
   const context = await getPriceContext(el, params);
   if (!context) return null;
-  await polyfills();
   const service = await initService();
   const price = service.createInlinePrice(context);
   return price;
@@ -118,7 +196,7 @@ export default async function init(el) {
   const isCta = searchParams.get('type') === 'checkoutUrl';
   const merch = await (isCta ? buildCta : buildPrice)(el, searchParams);
   const service = await initService();
-  const log = service.log.module('merch');
+  const log = service.Log.module('merch');
   if (merch) {
     log.debug('Rendering:', { options: { ...merch.dataset }, merch, el });
     el.replaceWith(merch);

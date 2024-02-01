@@ -1,6 +1,8 @@
 import { importMapsPlugin } from '@web/dev-server-import-maps';
 import { defaultReporter, summaryReporter } from '@web/test-runner';
 
+const GITHUB_ACTIONS = process.env.GITHUB_ACTIONS === 'true';
+
 function customReporter() {
   return {
     async reportTestFileResults({ logger, sessionsForTestFile }) {
@@ -27,6 +29,7 @@ export default {
       '**/test/**',
       '**/deps/**',
       '**/imslib/imslib.min.js',
+      '**/features/spectrum-web-components/**',
       // TODO: folders below need to have tests written for 100% coverage
       '**/ui/controls/**',
       '**/blocks/library-config/**',
@@ -34,7 +37,7 @@ export default {
       '**/special/tacocat/**',
     ],
   },
-  testFramework: { config: { retries: 1 } },
+  testFramework: { config: { retries: GITHUB_ACTIONS ? 1 : 0 } },
   plugins: [importMapsPlugin({})],
   reporters: [
     defaultReporter({ reportTestResults: true, reportTestProgress: true }),
@@ -44,6 +47,7 @@ export default {
   testRunnerHtml: (testFramework) => `
     <html>
       <head>
+        <link rel="icon" href="/libs/img/favicons/favicon.ico" size="any">
         <script type='module'>
           const oldFetch = window.fetch;
           window.fetch = async (resource, options) => {
