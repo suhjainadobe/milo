@@ -22,7 +22,8 @@ const loadAdobeTv = (a) => {
       const screenWidth = window.innerWidth;
       if (screenWidth <= MOBILE_SIZE) {
        const urlobj = new URL(a.href);
-        a.href = urlobj.searchParams.delete('autoplay');
+        urlobj.searchParams.delete('autoplay');
+        a.href = urlobj.href;
       }
     const embed = `<div class="milo-video">
       <iframe src="${a.href}" class="adobetv" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no" allow="encrypted-media" title="Adobe Video Publishing Cloud Player">
