@@ -19,12 +19,12 @@ const loadAdobeTv = (a) => {
     applyHoverPlay(videoElem);
     a.remove();
   } else {
-      const screenWidth = window.innerWidth;
-      if (screenWidth <= MOBILE_SIZE) {
-       const urlobj = new URL(a.href);
-        urlobj.searchParams.delete('autoplay');
-        a.href = urlobj.href;
-      }
+      // const screenWidth = window.innerWidth;
+      // if (screenWidth <= MOBILE_SIZE) {
+      //  const urlobj = new URL(a.href);
+      //   urlobj.searchParams.delete('autoplay');
+      //   a.href = urlobj.href;
+      // }
     const embed = `<div class="milo-video">
       <iframe src="${a.href}" class="adobetv" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no" allow="encrypted-media" title="Adobe Video Publishing Cloud Player">
       </iframe>
@@ -41,8 +41,8 @@ export default function init(a) {
   } else {
     createIntersectionObserver({
       el: a,
-      options: { rootMargin: `${ROOT_MARGIN}px` },
-      // options: { threshold : 0.2 },
+      // options: { rootMargin: `${ROOT_MARGIN}px` },
+      options: { threshold : 0.2 },
       callback: loadAdobeTv,
     });
   }
