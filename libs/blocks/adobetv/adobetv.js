@@ -42,7 +42,7 @@ export default function init(a) {
     createIntersectionObserver({
       el: a,
       // options: { rootMargin: `${ROOT_MARGIN}px` },
-      options: { threshold : 0.2 },
+      options: { threshold : 0.01 },
       callback: loadAdobeTv,
     });
   }
