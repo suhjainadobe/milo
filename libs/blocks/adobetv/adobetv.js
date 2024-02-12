@@ -11,6 +11,8 @@ const loadAdobeTv = (a) => {
     const { href, hash } = a;
     const screenWidth = window.innerWidth;
       if (screenWidth <= MOBILE_SIZE) {
+        const attrs = getVideoAttrs(hash);
+      } else {
         const attrs = getVideoAttrs(hash || 'autoplay');
       }
     // const attrs = getVideoAttrs(hash || 'autoplay');
