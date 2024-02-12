@@ -1,7 +1,7 @@
 import { createIntersectionObserver } from '../../utils/utils.js';
 import { applyHoverPlay, getVideoAttrs } from '../../utils/decorate.js';
 
-const ROOT_MARGIN = 100;
+const ROOT_MARGIN = window.innerHeight * 0.9;
 const MOBILE_SIZE = 768;
 
 const loadAdobeTv = (a) => {
