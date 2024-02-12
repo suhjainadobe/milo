@@ -9,13 +9,7 @@ const loadAdobeTv = (a) => {
   if (a.href.includes('.mp4') && bgBlocks.some((b) => a.closest(`.${b}`))) {
     a.classList.add('hide');
     const { href, hash } = a;
-    const screenWidth = window.innerWidth;
-      if (screenWidth <= MOBILE_SIZE) {
-        const attrs = getVideoAttrs(hash);
-      } else {
-        const attrs = getVideoAttrs(hash || 'autoplay');
-      }
-    // const attrs = getVideoAttrs(hash || 'autoplay');
+    const attrs = getVideoAttrs(hash || 'autoplay');
     const video = `<video ${attrs}>
           <source src="${href}" type="video/mp4" />
         </video>`;
@@ -25,6 +19,11 @@ const loadAdobeTv = (a) => {
     applyHoverPlay(videoElem);
     a.remove();
   } else {
+      const screenWidth = window.innerWidth;
+      if (screenWidth <= MOBILE_SIZE) {
+       const urlobj = a.href;
+        a.href = urlobj.searchParams.delete('autoplay');
+      }
     const embed = `<div class="milo-video">
       <iframe src="${a.href}" class="adobetv" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no" allow="encrypted-media" title="Adobe Video Publishing Cloud Player">
       </iframe>
