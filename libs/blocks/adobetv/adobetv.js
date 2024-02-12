@@ -26,7 +26,7 @@ const loadAdobeTv = (a) => {
     a.remove();
   } else {
     const embed = `<div class="milo-video">
-      <iframe src="${a.href}" class="adobetv" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no" allow="encrypted-media" title="Adobe Video Publishing Cloud Player" loading="lazy">
+      <iframe src="${a.href}" class="adobetv" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no" allow="encrypted-media" title="Adobe Video Publishing Cloud Player">
       </iframe>
     </div>`;
     a.insertAdjacentHTML('afterend', embed);
@@ -41,8 +41,8 @@ export default function init(a) {
   } else {
     createIntersectionObserver({
       el: a,
-      options: { rootMargin: `${ROOT_MARGIN}px` },
-      // options: { threshold : 0.2 },
+      // options: { rootMargin: `${ROOT_MARGIN}px` },
+      options: { threshold : 0.2 },
       callback: loadAdobeTv,
     });
   }
