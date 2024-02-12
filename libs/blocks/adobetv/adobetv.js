@@ -21,7 +21,7 @@ const loadAdobeTv = (a) => {
   } else {
       const screenWidth = window.innerWidth;
       if (screenWidth <= MOBILE_SIZE) {
-       const urlobj = a.href;
+       const urlobj = new URL(a.href);
         a.href = urlobj.searchParams.delete('autoplay');
       }
     const embed = `<div class="milo-video">
