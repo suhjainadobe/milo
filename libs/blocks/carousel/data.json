@@ -1,0 +1,629 @@
+{
+  "_links": {
+    "next": {
+      "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/assets?cursor=FKDJlhALx6yUI97l4ba01CMaVp2ikix2Y9SSDmz4%2F0suNIvGBWM1OSOeoXHOSKQX1mnWprr4Uuikaz0WVeq7MSsGgY7IRR2z9d5%2FzBTlpazvzCYwAlz9zHZH23I4DaA0oXBZIXLpJweKW9CTtLEhOyFBlBsxzVXvydyuXAk%2FC5Zb05Fmgsrx8tBNUQyBFHX%2F&cursor=pFL%2F4rM%2BCScLvwkOf1lYJq7Zv%2BMvoduABDDM4dWZT%2Brz%2F1H4fgT17yJc5lHu94jr8PBQj8FdQQgNRmgcWfQPOKHJLYX67E3ycEtKUyCMJEmQZWzfMB6eUDJ31iKSQMg9Thn5hrP4pckmvi%2Bw%2Bji473ogeHhlNe2nbwAjpH0IgztcJTP4iEaLEEArxlZJ4fig",
+      "type": "application/hal+json"
+    },
+    "self": {
+      "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/assets?size=2&sort=date_desc&include_pending_assets=true",
+      "type": "application/hal+json"
+    }
+  },
+  "_embedded": {
+    "assets": [
+      {
+        "_links": {
+          "rendition": {
+            "max_width": 1792,
+            "templated": true,
+            "max_height": 2304,
+            "href": "https://cdn-stage.cp.adobe.io/content/2/rendition/6bdd7937-db18-41be-b235-4ab4353ac895/artwork/d6e93281-1e77-4c05-a84a-de7340f889cd/version/0/format/{format}/dimension/{dimension}/size/{size}"
+          },
+          "self": {
+            "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/assets/6bdd7937-db18-41be-b235-4ab4353ac895",
+            "type": "application/hal+json"
+          },
+          "asset_rendition": {
+            "max_width": 1792,
+            "templated": true,
+            "max_height": 2304,
+            "href": "https://cdn-stage.cp.adobe.io/content/2/rendition/6bdd7937-db18-41be-b235-4ab4353ac895/format/{format}/dimension/{dimension}/size/{size}/ts/1707309380321"
+          }
+        },
+        "_embedded": {
+          "owner": {
+            "_links": {
+              "images": [
+                {
+                  "width": 50,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/50",
+                  "type": "image/jpeg",
+                  "height": 50
+                },
+                {
+                  "width": 100,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/100",
+                  "type": "image/jpeg",
+                  "height": 100
+                },
+                {
+                  "width": 115,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/115",
+                  "type": "image/jpeg",
+                  "height": 115
+                },
+                {
+                  "width": 138,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/138",
+                  "type": "image/jpeg",
+                  "height": 138
+                },
+                {
+                  "width": 230,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/230",
+                  "type": "image/jpeg",
+                  "height": 230
+                },
+                {
+                  "width": 276,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/276",
+                  "type": "image/jpeg",
+                  "height": 276
+                }
+              ],
+              "self": {
+                "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/users/cb61fff5"
+              }
+            },
+            "id": "cb61fff5",
+            "first_name": "Carla",
+            "last_name": "Doe",
+            "user_name": "cb61fff5",
+            "display_name": "Carla Doe",
+            "city": "",
+            "state": "",
+            "country": "",
+            "location": "",
+            "is_valid_profile": true,
+            "has_default_image": false
+          },
+          "artwork": {
+            "_links": {
+              "rendition": {
+                "max_width": 1792,
+                "templated": true,
+                "max_height": 2304,
+                "href": "https://cdn-stage.cp.adobe.io/content/2/rendition/6bdd7937-db18-41be-b235-4ab4353ac895/artwork/d6e93281-1e77-4c05-a84a-de7340f889cd/version/0/format/{format}/dimension/{dimension}/size/{size}"
+              },
+              "self": {
+                "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/assets/6bdd7937-db18-41be-b235-4ab4353ac895/artwork",
+                "type": "application/hal+json"
+              }
+            },
+            "id": "d6e93281-1e77-4c05-a84a-de7340f889cd",
+            "urn": "urn:aaid:sc:US:d6e93281-1e77-4c05-a84a-de7340f889cd",
+            "created": "2024-02-07T12:36:19.263Z",
+            "type": "image/jpeg",
+            "size": 1154614,
+            "width": 1792,
+            "height": 2304
+          }
+        },
+        "id": "6bdd7937-db18-41be-b235-4ab4353ac895",
+        "urn": "urn:aaid:sc:US:6bdd7937-db18-41be-b235-4ab4353ac895",
+        "created": "2024-02-07T12:36:12.298Z",
+        "updated": "2024-02-07T12:36:20.321Z",
+        "published": "2024-02-07T12:40:14.177Z",
+        "metadata_updated": "2024-02-07T12:36:21.984Z",
+        "type": "application/vnd.adobe.firefly-cp+dcx",
+        "title": "Create an image of a picturesque vineyard during the \"\" golden hour, with grapevines bathed in warm sunlight.",
+        "tags": [],
+        "category": {
+          "id": "text2Image",
+          "name": "text2Image"
+        },
+        "custom": {
+          "firefly#model": {
+            "docVersion": "v2",
+            "module": "text2Image",
+            "dataModelVersion": "2.0.0"
+          },
+          "input": {
+            "firefly#inputModel": "{\"type\":\"text2Image\",\"title\":\"Create an image of a picturesque vineyard during the \\\"\\\" golden hour, with grapevines bathed in warm sunlight.\",\"mimeType\":\"image/jpeg\",\"seed\":77348,\"seeds\":[62097,74511,77348,92911],\"aspectRatio\":0.7777777777777778,\"model\":{\"browserId\":\"200184\",\"prompt\":\"Create an image of a picturesque vineyard during the \\\"\\\" golden hour, with grapevines bathed in warm sunlight.\",\"promptType\":\"inspiration\",\"styles\":{\"mode\":\"manual\",\"value\":[\"art\",\"surreal_lighting\"]},\"seeds\":[62097,74511,77348,92911],\"aspectRatio\":\"portrait\",\"advancedParams\":{},\"locale\":\"en-IN\",\"guideStrength\":50,\"rlhfCreativity\":6,\"keywords\":{\"mode\":\"auto\"},\"modelInputVersion\":\"v2\",\"seed\":77348}}"
+          },
+          "output": {
+            "firefly#outputModel": {
+              "generation": {
+                "type": "array",
+                "expectedMimeType": "image/jpeg",
+                "expectedArrayLength": "1"
+              }
+            }
+          }
+        },
+        "alias": "ABDog",
+        "aliases": [
+          "ABDog"
+        ],
+        "stats": {
+          "detail_count": 26,
+          "anonymous_like_count": 0,
+          "purchase_count": 0,
+          "original_count": 0,
+          "copy_count": 0,
+          "add_to_library_count": 0,
+          "website_count": 0,
+          "video_info_count": 0,
+          "video_stream_count": 0,
+          "video_embed_count": 0,
+          "comment_count": 0,
+          "custom_counts": {}
+        },
+        "purchased": false,
+        "liked": false,
+        "is_owner": false,
+        "activities": {}
+      },
+      {
+        "_links": {
+          "rendition": {
+            "max_width": 2688,
+            "templated": true,
+            "max_height": 1536,
+            "href": "https://cdn-stage.cp.adobe.io/content/2/rendition/e90ff1a9-fc48-4a08-9a2d-e29803a27b24/artwork/749ad182-dd26-43be-9c6b-7e8315ef6e92/version/0/format/{format}/dimension/{dimension}/size/{size}"
+          },
+          "self": {
+            "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/assets/e90ff1a9-fc48-4a08-9a2d-e29803a27b24",
+            "type": "application/hal+json"
+          },
+          "asset_rendition": {
+            "max_width": 2688,
+            "templated": true,
+            "max_height": 1536,
+            "href": "https://cdn-stage.cp.adobe.io/content/2/rendition/e90ff1a9-fc48-4a08-9a2d-e29803a27b24/format/{format}/dimension/{dimension}/size/{size}/ts/1707308481801"
+          }
+        },
+        "_embedded": {
+          "owner": {
+            "_links": {
+              "images": [
+                {
+                  "width": 50,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/50",
+                  "type": "image/jpeg",
+                  "height": 50
+                },
+                {
+                  "width": 100,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/100",
+                  "type": "image/jpeg",
+                  "height": 100
+                },
+                {
+                  "width": 115,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/115",
+                  "type": "image/jpeg",
+                  "height": 115
+                },
+                {
+                  "width": 138,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/138",
+                  "type": "image/jpeg",
+                  "height": 138
+                },
+                {
+                  "width": 230,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/230",
+                  "type": "image/jpeg",
+                  "height": 230
+                },
+                {
+                  "width": 276,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/276",
+                  "type": "image/jpeg",
+                  "height": 276
+                }
+              ],
+              "self": {
+                "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/users/cb61fff5"
+              }
+            },
+            "id": "cb61fff5",
+            "first_name": "Carla",
+            "last_name": "Doe",
+            "user_name": "cb61fff5",
+            "display_name": "Carla Doe",
+            "city": "",
+            "state": "",
+            "country": "",
+            "location": "",
+            "is_valid_profile": true,
+            "has_default_image": false
+          },
+          "artwork": {
+            "_links": {
+              "rendition": {
+                "max_width": 2688,
+                "templated": true,
+                "max_height": 1536,
+                "href": "https://cdn-stage.cp.adobe.io/content/2/rendition/e90ff1a9-fc48-4a08-9a2d-e29803a27b24/artwork/749ad182-dd26-43be-9c6b-7e8315ef6e92/version/0/format/{format}/dimension/{dimension}/size/{size}"
+              },
+              "self": {
+                "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/assets/e90ff1a9-fc48-4a08-9a2d-e29803a27b24/artwork",
+                "type": "application/hal+json"
+              }
+            },
+            "id": "749ad182-dd26-43be-9c6b-7e8315ef6e92",
+            "urn": "urn:aaid:sc:US:749ad182-dd26-43be-9c6b-7e8315ef6e92",
+            "created": "2024-02-07T12:21:20.921Z",
+            "type": "image/jpeg",
+            "size": 533691,
+            "width": 2688,
+            "height": 1536
+          }
+        },
+        "id": "e90ff1a9-fc48-4a08-9a2d-e29803a27b24",
+        "urn": "urn:aaid:sc:US:e90ff1a9-fc48-4a08-9a2d-e29803a27b24",
+        "created": "2024-02-07T12:21:17.671Z",
+        "updated": "2024-02-07T12:21:21.801Z",
+        "published": "2024-02-07T12:25:04.194Z",
+        "metadata_updated": "2024-02-07T12:21:22.676Z",
+        "type": "application/vnd.adobe.firefly-cp+dcx",
+        "title": "\"Close up of detailed sci-fi suit, // \\\\ futuristic render like transformers",
+        "tags": [],
+        "category": {
+          "id": "text2Image",
+          "name": "text2Image"
+        },
+        "custom": {
+          "firefly#model": {
+            "docVersion": "v2",
+            "module": "text2Image",
+            "dataModelVersion": "2.0.0"
+          },
+          "input": {
+            "firefly#inputModel": "{\"type\":\"text2Image\",\"title\":\"\\\"Close up of detailed sci-fi suit, // \\\\\\\\ futuristic render like transformers\",\"mimeType\":\"image/jpeg\",\"seed\":29939,\"seeds\":[2523,29939,6226,967],\"aspectRatio\":1.75,\"model\":{\"browserId\":\"200184\",\"prompt\":\"\\\"Close up of detailed sci-fi suit, // \\\\\\\\ futuristic render like transformers\",\"promptType\":\"inspiration\",\"styles\":{\"mode\":\"manual\",\"value\":[\"photo\"]},\"seeds\":[2523,29939,6226,967],\"aspectRatio\":\"widescreen\",\"advancedParams\":{},\"locale\":\"en-US\",\"guideStrength\":50,\"rlhfCreativity\":6,\"modelInputVersion\":\"v2\",\"exif\":{\"mode\":\"auto\"},\"seed\":29939}}"
+          },
+          "output": {
+            "firefly#outputModel": {
+              "generation": {
+                "type": "array",
+                "expectedMimeType": "image/jpeg",
+                "expectedArrayLength": "1"
+              }
+            }
+          }
+        },
+        "alias": "n5pXw",
+        "aliases": [
+          "n5pXw"
+        ],
+        "stats": {
+          "detail_count": 8,
+          "anonymous_like_count": 0,
+          "purchase_count": 0,
+          "original_count": 0,
+          "copy_count": 0,
+          "add_to_library_count": 0,
+          "website_count": 0,
+          "video_info_count": 0,
+          "video_stream_count": 0,
+          "video_embed_count": 0,
+          "comment_count": 0,
+          "custom_counts": {}
+        },
+        "purchased": false,
+        "liked": false,
+        "is_owner": false,
+        "activities": {}
+      },
+      {
+        "_links": {
+          "rendition": {
+            "max_width": 1792,
+            "templated": true,
+            "max_height": 2304,
+            "href": "https://cdn-stage.cp.adobe.io/content/2/rendition/6bdd7937-db18-41be-b235-4ab4353ac895/artwork/d6e93281-1e77-4c05-a84a-de7340f889cd/version/0/format/{format}/dimension/{dimension}/size/{size}"
+          },
+          "self": {
+            "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/assets/6bdd7937-db18-41be-b235-4ab4353ac895",
+            "type": "application/hal+json"
+          },
+          "asset_rendition": {
+            "max_width": 1792,
+            "templated": true,
+            "max_height": 2304,
+            "href": "https://cdn-stage.cp.adobe.io/content/2/rendition/6bdd7937-db18-41be-b235-4ab4353ac895/format/{format}/dimension/{dimension}/size/{size}/ts/1707309380321"
+          }
+        },
+        "_embedded": {
+          "owner": {
+            "_links": {
+              "images": [
+                {
+                  "width": 50,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/50",
+                  "type": "image/jpeg",
+                  "height": 50
+                },
+                {
+                  "width": 100,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/100",
+                  "type": "image/jpeg",
+                  "height": 100
+                },
+                {
+                  "width": 115,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/115",
+                  "type": "image/jpeg",
+                  "height": 115
+                },
+                {
+                  "width": 138,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/138",
+                  "type": "image/jpeg",
+                  "height": 138
+                },
+                {
+                  "width": 230,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/230",
+                  "type": "image/jpeg",
+                  "height": 230
+                },
+                {
+                  "width": 276,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/276",
+                  "type": "image/jpeg",
+                  "height": 276
+                }
+              ],
+              "self": {
+                "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/users/cb61fff5"
+              }
+            },
+            "id": "cb61fff5",
+            "first_name": "Carla",
+            "last_name": "Doe",
+            "user_name": "cb61fff5",
+            "display_name": "Carla Doe",
+            "city": "",
+            "state": "",
+            "country": "",
+            "location": "",
+            "is_valid_profile": true,
+            "has_default_image": false
+          },
+          "artwork": {
+            "_links": {
+              "rendition": {
+                "max_width": 1792,
+                "templated": true,
+                "max_height": 2304,
+                "href": "https://cdn-stage.cp.adobe.io/content/2/rendition/6bdd7937-db18-41be-b235-4ab4353ac895/artwork/d6e93281-1e77-4c05-a84a-de7340f889cd/version/0/format/{format}/dimension/{dimension}/size/{size}"
+              },
+              "self": {
+                "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/assets/6bdd7937-db18-41be-b235-4ab4353ac895/artwork",
+                "type": "application/hal+json"
+              }
+            },
+            "id": "d6e93281-1e77-4c05-a84a-de7340f889cd",
+            "urn": "urn:aaid:sc:US:d6e93281-1e77-4c05-a84a-de7340f889cd",
+            "created": "2024-02-07T12:36:19.263Z",
+            "type": "image/jpeg",
+            "size": 1154614,
+            "width": 1792,
+            "height": 2304
+          }
+        },
+        "id": "6bdd7937-db18-41be-b235-4ab4353ac895",
+        "urn": "urn:aaid:sc:US:6bdd7937-db18-41be-b235-4ab4353ac895",
+        "created": "2024-02-07T12:36:12.298Z",
+        "updated": "2024-02-07T12:36:20.321Z",
+        "published": "2024-02-07T12:40:14.177Z",
+        "metadata_updated": "2024-02-07T12:36:21.984Z",
+        "type": "application/vnd.adobe.firefly-cp+dcx",
+        "title": "Create an image of a picturesque vineyard during the \"\" golden hour, with grapevines bathed in warm sunlight.",
+        "tags": [],
+        "category": {
+          "id": "text2Image",
+          "name": "text2Image"
+        },
+        "custom": {
+          "firefly#model": {
+            "docVersion": "v2",
+            "module": "text2Image",
+            "dataModelVersion": "2.0.0"
+          },
+          "input": {
+            "firefly#inputModel": "{\"type\":\"text2Image\",\"title\":\"Create an image of a picturesque vineyard during the \\\"\\\" golden hour, with grapevines bathed in warm sunlight.\",\"mimeType\":\"image/jpeg\",\"seed\":77348,\"seeds\":[62097,74511,77348,92911],\"aspectRatio\":0.7777777777777778,\"model\":{\"browserId\":\"200184\",\"prompt\":\"Create an image of a picturesque vineyard during the \\\"\\\" golden hour, with grapevines bathed in warm sunlight.\",\"promptType\":\"inspiration\",\"styles\":{\"mode\":\"manual\",\"value\":[\"art\",\"surreal_lighting\"]},\"seeds\":[62097,74511,77348,92911],\"aspectRatio\":\"portrait\",\"advancedParams\":{},\"locale\":\"en-IN\",\"guideStrength\":50,\"rlhfCreativity\":6,\"keywords\":{\"mode\":\"auto\"},\"modelInputVersion\":\"v2\",\"seed\":77348}}"
+          },
+          "output": {
+            "firefly#outputModel": {
+              "generation": {
+                "type": "array",
+                "expectedMimeType": "image/jpeg",
+                "expectedArrayLength": "1"
+              }
+            }
+          }
+        },
+        "alias": "ABDog",
+        "aliases": [
+          "ABDog"
+        ],
+        "stats": {
+          "detail_count": 26,
+          "anonymous_like_count": 0,
+          "purchase_count": 0,
+          "original_count": 0,
+          "copy_count": 0,
+          "add_to_library_count": 0,
+          "website_count": 0,
+          "video_info_count": 0,
+          "video_stream_count": 0,
+          "video_embed_count": 0,
+          "comment_count": 0,
+          "custom_counts": {}
+        },
+        "purchased": false,
+        "liked": false,
+        "is_owner": false,
+        "activities": {}
+      },
+      {
+        "_links": {
+          "rendition": {
+            "max_width": 2688,
+            "templated": true,
+            "max_height": 1536,
+            "href": "https://cdn-stage.cp.adobe.io/content/2/rendition/e90ff1a9-fc48-4a08-9a2d-e29803a27b24/artwork/749ad182-dd26-43be-9c6b-7e8315ef6e92/version/0/format/{format}/dimension/{dimension}/size/{size}"
+          },
+          "self": {
+            "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/assets/e90ff1a9-fc48-4a08-9a2d-e29803a27b24",
+            "type": "application/hal+json"
+          },
+          "asset_rendition": {
+            "max_width": 2688,
+            "templated": true,
+            "max_height": 1536,
+            "href": "https://cdn-stage.cp.adobe.io/content/2/rendition/e90ff1a9-fc48-4a08-9a2d-e29803a27b24/format/{format}/dimension/{dimension}/size/{size}/ts/1707308481801"
+          }
+        },
+        "_embedded": {
+          "owner": {
+            "_links": {
+              "images": [
+                {
+                  "width": 50,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/50",
+                  "type": "image/jpeg",
+                  "height": 50
+                },
+                {
+                  "width": 100,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/100",
+                  "type": "image/jpeg",
+                  "height": 100
+                },
+                {
+                  "width": 115,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/115",
+                  "type": "image/jpeg",
+                  "height": 115
+                },
+                {
+                  "width": 138,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/138",
+                  "type": "image/jpeg",
+                  "height": 138
+                },
+                {
+                  "width": 230,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/230",
+                  "type": "image/jpeg",
+                  "height": 230
+                },
+                {
+                  "width": 276,
+                  "href": "https://pps-stage.services.adobe.com/api/profile/145E195D657BBC820A494114@AdobeID/image/6174744d-0d75-4587-ab52-6b77d9a855c4/276",
+                  "type": "image/jpeg",
+                  "height": 276
+                }
+              ],
+              "self": {
+                "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/users/cb61fff5"
+              }
+            },
+            "id": "cb61fff5",
+            "first_name": "Carla",
+            "last_name": "Doe",
+            "user_name": "cb61fff5",
+            "display_name": "Carla Doe",
+            "city": "",
+            "state": "",
+            "country": "",
+            "location": "",
+            "is_valid_profile": true,
+            "has_default_image": false
+          },
+          "artwork": {
+            "_links": {
+              "rendition": {
+                "max_width": 2688,
+                "templated": true,
+                "max_height": 1536,
+                "href": "https://cdn-stage.cp.adobe.io/content/2/rendition/e90ff1a9-fc48-4a08-9a2d-e29803a27b24/artwork/749ad182-dd26-43be-9c6b-7e8315ef6e92/version/0/format/{format}/dimension/{dimension}/size/{size}"
+              },
+              "self": {
+                "href": "https://cc-api-cp-stage.adobe.io/api/v2/ff_community/assets/e90ff1a9-fc48-4a08-9a2d-e29803a27b24/artwork",
+                "type": "application/hal+json"
+              }
+            },
+            "id": "749ad182-dd26-43be-9c6b-7e8315ef6e92",
+            "urn": "urn:aaid:sc:US:749ad182-dd26-43be-9c6b-7e8315ef6e92",
+            "created": "2024-02-07T12:21:20.921Z",
+            "type": "image/jpeg",
+            "size": 533691,
+            "width": 2688,
+            "height": 1536
+          }
+        },
+        "id": "e90ff1a9-fc48-4a08-9a2d-e29803a27b24",
+        "urn": "urn:aaid:sc:US:e90ff1a9-fc48-4a08-9a2d-e29803a27b24",
+        "created": "2024-02-07T12:21:17.671Z",
+        "updated": "2024-02-07T12:21:21.801Z",
+        "published": "2024-02-07T12:25:04.194Z",
+        "metadata_updated": "2024-02-07T12:21:22.676Z",
+        "type": "application/vnd.adobe.firefly-cp+dcx",
+        "title": "\"Close up of detailed sci-fi suit, // \\\\ futuristic render like transformers",
+        "tags": [],
+        "category": {
+          "id": "text2Image",
+          "name": "text2Image"
+        },
+        "custom": {
+          "firefly#model": {
+            "docVersion": "v2",
+            "module": "text2Image",
+            "dataModelVersion": "2.0.0"
+          },
+          "input": {
+            "firefly#inputModel": "{\"type\":\"text2Image\",\"title\":\"\\\"Close up of detailed sci-fi suit, // \\\\\\\\ futuristic render like transformers\",\"mimeType\":\"image/jpeg\",\"seed\":29939,\"seeds\":[2523,29939,6226,967],\"aspectRatio\":1.75,\"model\":{\"browserId\":\"200184\",\"prompt\":\"\\\"Close up of detailed sci-fi suit, // \\\\\\\\ futuristic render like transformers\",\"promptType\":\"inspiration\",\"styles\":{\"mode\":\"manual\",\"value\":[\"photo\"]},\"seeds\":[2523,29939,6226,967],\"aspectRatio\":\"widescreen\",\"advancedParams\":{},\"locale\":\"en-US\",\"guideStrength\":50,\"rlhfCreativity\":6,\"modelInputVersion\":\"v2\",\"exif\":{\"mode\":\"auto\"},\"seed\":29939}}"
+          },
+          "output": {
+            "firefly#outputModel": {
+              "generation": {
+                "type": "array",
+                "expectedMimeType": "image/jpeg",
+                "expectedArrayLength": "1"
+              }
+            }
+          }
+        },
+        "alias": "n5pXw",
+        "aliases": [
+          "n5pXw"
+        ],
+        "stats": {
+          "detail_count": 8,
+          "anonymous_like_count": 0,
+          "purchase_count": 0,
+          "original_count": 0,
+          "copy_count": 0,
+          "add_to_library_count": 0,
+          "website_count": 0,
+          "video_info_count": 0,
+          "video_stream_count": 0,
+          "video_embed_count": 0,
+          "comment_count": 0,
+          "custom_counts": {}
+        },
+        "purchased": false,
+        "liked": false,
+        "is_owner": false,
+        "activities": {}
+      }
+    ]
+  },
+  "total": 5174
+}
