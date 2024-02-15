@@ -304,15 +304,92 @@ function handleChangingSlides(carouselElements) {
   mobileSwipeDetect(carouselElements);
 }
 
-export default function init(el) {
+async function getslides(el) {
+  let slides = '';
+  if (el.classList.contains('community')) {
+    const sectionMeta = el.nextElementSibling;
+    console.log('sectionMeta', sectionMeta);
+    // const slide = []
+    // const accessToken = window.adobeIMS.getAccessToken();
+    // fetch("https://community-hubs-stage.adobe.io/api/v2/ff_community/assets?size=2&sort=date_desc&include_pending_assets=true", {
+    //   method: "GET",
+    //   headers: {
+    //     "accept": "application/hal+json",
+    //     "Accept-Language": "en-US, en",
+    //     "X-Api-Key": "adobedotcom-cc",
+    //     // "Authorization": `Bearer ${accessToken.token}`,
+    //   },
+    //   mode: "no-cors"
+    //   })
+    //   .then(response => {
+    //   // if (!response.ok) {
+    //   //   throw new Error("Network response was not ok");
+    //   // }
+    //   console.log('res', response);
+    //   // return response.json();
+    //   })
+   await fetch(`${base}/blocks/carousel/data.json`)
+  .then(response => response.json())
+  .then(data => {
+    const assets = data._embedded.assets;
+    const rdx = [];
+    [...assets].forEach((ele, idx) => {
+      const section = createTag('div', { class: 'carousel-slide section' });
+      const content = createTag('div', { class: 'content' });
+      const image = createTag('img', { class: 'media' });
+      const url = ele._links.rendition.href;
+      // Define the values for {format}, {dimension}, and {size}
+      var formatValue = "jpg";
+      var dimensionValue = "width";
+      var sizeValue = "350";
+
+      // Define the regular expression to match the placeholders
+      var regex = /\{([a-zA-Z]+)\}/g;
+
+      // Replace the placeholders with the respective values
+      var newUrl = url.replace(regex, function(match, placeholder) {
+        switch (placeholder) {
+          case "format":
+            return formatValue;
+          case "dimension":
+            return dimensionValue;
+          case "size":
+            return sizeValue;
+          default:
+            return match;
+        }
+      });
+      image.setAttribute("src", newUrl)
+      const pic = createTag('picture', { class: 'media' }, image);
+      content.appendChild(pic);
+      section.appendChild(content);
+      section.appendChild(sectionMeta);
+      console.log('section2', section);
+      rdx.push(section);
+      section.setAttribute('data-index', idx);
+    });
+    slides = rdx;
+  })
+  .catch(error => console.error('Error fetching JSON:', error));
+  }
+  return slides;
+}
+
+export default async function init(el) {
   const carouselSection = el.closest('.section');
   if (!carouselSection) return;
-
-  const keyDivs = el.querySelectorAll(':scope > div > div:first-child');
+  let slides = '';
+  let parentArea = '';
+  if (el.classList.contains('community')) {
+    slides = await getslides(el);
+    parentArea = el.closest('.fragment') || document;
+  } else {
+    const keyDivs = el.querySelectorAll(':scope > div > div:first-child');
   const carouselName = keyDivs[0].textContent;
-  const parentArea = el.closest('.fragment') || document;
+  parentArea = el.closest('.fragment') || document;
   const candidateKeys = parentArea.querySelectorAll('div.section-metadata > div > div:first-child');
-  const slides = [...candidateKeys].reduce((rdx, key) => {
+  console.log('candidateKeys', candidateKeys);
+  slides = [...candidateKeys].reduce((rdx, key) => {
     if (key.textContent === 'carousel' && key.nextElementSibling.textContent === carouselName) {
       const slide = key.closest('.section');
       slide.classList.add('carousel-slide');
@@ -321,6 +398,8 @@ export default function init(el) {
     }
     return rdx;
   }, []);
+  }
+  console.log('slides', slides);
 
   const fragment = new DocumentFragment();
   const nextPreviousBtns = decorateNextPreviousBtns();
