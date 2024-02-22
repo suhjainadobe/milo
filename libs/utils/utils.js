@@ -1110,9 +1110,10 @@ export async function loadArea(area = document) {
     scrollToHashedElement(currentHash);
   }
 
-  if (isDoc) await documentPostSectionLoading(config);
-
-  await loadDeferred(area, areaBlocks, config);
+  if (isDoc) {
+    await documentPostSectionLoading(config);
+    await loadDeferred(area, areaBlocks, config);
+  } 
 }
 
 export function loadDelayed() {
