@@ -55,6 +55,11 @@ function handleDelay(time, section) {
   setTimeout(() => { section.classList.remove('hide-sticky-section'); }, getDelayTime(time));
 }
 
+function handleViewport(viewport, section) {
+  if (!(viewport || section)) return;
+  section.classList.add(`${viewport}-only`);
+}
+
 export const getMetadata = (el) => [...el.childNodes].reduce((rdx, row) => {
   if (row.children) {
     const key = row.children[0].textContent.trim().toLowerCase();
@@ -73,4 +78,5 @@ export default async function init(el) {
   if (metadata.layout) handleLayout(metadata.layout.text, section);
   if (metadata.masonry) handleMasonry(metadata.masonry.text, section);
   if (metadata.delay) handleDelay(metadata.delay.text, section);
+  if (metadata.viewport) handleViewport(metadata.viewport.text, section);
 }

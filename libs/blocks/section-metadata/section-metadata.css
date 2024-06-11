@@ -244,11 +244,19 @@ main > .section[class*='-up'] > .content {
   .section.two-up.reverse-mobile > div:nth-child(2) {
     order: 1;
   }
+
+  .section.desktop-only {
+    display: none;
+  }
 }
 
 @media screen and (min-width: 600px) and (max-width: 1200px) {
   .section.five-up {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .section.mobile-only {
+    display: none;
   }
 
   .section.masonry-layout {
@@ -299,6 +307,10 @@ main > .section[class*='-up'] > .content {
 @media screen and (min-width: 1200px) {
   .section.two-up {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .section.mobile-only {
+    display: none;
   }
 
   .section.three-up {
