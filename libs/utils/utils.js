@@ -1160,9 +1160,9 @@ export async function loadArea(area = document) {
   const areaBlocks = [];
   for (const section of sections) {
     console.log('know if viewport changes', defineDeviceByScreenSize().toLowerCase());
-    const content = section.el.querySelector('.content');
-    console.log('----section----', content.innerText);
-    if(content.innerText.toLowerCase() == defineDeviceByScreenSize().toLowerCase()) {
+    const content = section.el.querySelector('.content .icon');
+    console.log('----section----', content.classList[1].split('icon-')[1]);
+    if(content.classList[1].split('icon-')[1].toLowerCase() == defineDeviceByScreenSize().toLowerCase()) {
       const sectionBlocks = await processSection(section, config, isDoc);
       console.log('sectionBlocks', sectionBlocks);
       areaBlocks.push(...sectionBlocks);
