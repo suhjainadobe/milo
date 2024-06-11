@@ -136,6 +136,17 @@ ENVS.local = {
 
 export const MILO_EVENTS = { DEFERRED: 'milo:deferred' };
 
+function defineDeviceByScreenSize() {
+  const screenWidth = window.innerWidth;
+  if (screenWidth >= '900') {
+    return 'DESKTOP';
+  }
+  if (screenWidth <= '768') {
+    return 'MOBILE';
+  }
+  return 'TABLET';
+}
+
 const LANGSTORE = 'langstore';
 const PAGE_URL = new URL(window.location.href);
 
@@ -1148,12 +1159,18 @@ export async function loadArea(area = document) {
 
   const areaBlocks = [];
   for (const section of sections) {
-    const sectionBlocks = await processSection(section, config, isDoc);
-    areaBlocks.push(...sectionBlocks);
+    console.log('know if viewport changes', defineDeviceByScreenSize().toLowerCase());
+    const content = section.el.querySelector('.content');
+    console.log('----section----', content.innerText);
+    if(content.innerText.toLowerCase() == defineDeviceByScreenSize().toLowerCase()) {
+      const sectionBlocks = await processSection(section, config, isDoc);
+      console.log('sectionBlocks', sectionBlocks);
+      areaBlocks.push(...sectionBlocks);
 
-    areaBlocks.forEach((block) => {
-      if (!block.className.includes('metadata')) block.dataset.block = '';
-    });
+      areaBlocks.forEach((block) => {
+        if (!block.className.includes('metadata')) block.dataset.block = '';
+      });
+    }
   }
 
   const currentHash = window.location.hash;
