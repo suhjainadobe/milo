@@ -811,6 +811,10 @@ a.static:hover {
     display: block;
     text-align: center;
   }
+
+  main .section .desktop-only {
+    display: none;
+  }
 }
 
 /* Tablet up */
@@ -909,6 +913,10 @@ a.static:hover {
     display: none;
   }
 
+  main .section .mobile-only {
+    display: none;
+  }
+
   .con-block .background .desktop-only { display: block; }
 
   /* spacing */
@@ -947,4 +955,8 @@ a.static:hover {
 /* desktop large < 1440 */
 @media screen and (min-width: 1440px) {
   .con-block.max-width-12-desktop-large .foreground { max-width: 1200px; }
+
+  main .section .mobile-only {
+    display: none;
+  }
 }
