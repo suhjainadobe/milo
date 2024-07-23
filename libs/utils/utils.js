@@ -724,7 +724,7 @@ async function decoratePlaceholders(area, config) {
   const el = area.querySelector('main') || area;
   const regex = /{{(.*?)}}|%7B%7B(.*?)%7D%7D/g;
   const found = regex.test(el.innerHTML);
-  if (!found) return;
+  if (!found) return el;
   const { replaceText } = await import('../features/placeholders.js');
   el.innerHTML = await replaceText(el.innerHTML, config, regex);
   return el;
