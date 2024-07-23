@@ -720,12 +720,14 @@ async function decorateIcons(area, config) {
 }
 
 async function decoratePlaceholders(area, config) {
+  console.log('area', area);
   const el = area.querySelector('main') || area;
   const regex = /{{(.*?)}}|%7B%7B(.*?)%7D%7D/g;
   const found = regex.test(el.innerHTML);
   if (!found) return;
   const { replaceText } = await import('../features/placeholders.js');
   el.innerHTML = await replaceText(el.innerHTML, config, regex);
+  return el.innerHTML;
 }
 
 async function loadFooter() {
@@ -797,9 +799,36 @@ function decorateSection(section, idx) {
   };
 }
 
-function decorateSections(el, isDoc) {
+// function decorateSections(el, isDoc, config) {
+//   const selector = isDoc ? 'body > main > div' : ':scope > div';
+//   return [...el.querySelectorAll(selector)].map({
+//     await decoratePlaceholders(selector, config);
+//     decorateSection
+//   });
+// }
+// async function decorateSections(el, isDoc, config) {
+//   const selector = isDoc ? 'body > main > div' : ':scope > div';
+//   const sections = [...el.querySelectorAll(selector)];
+//   sections.forEach(async (section) => {
+//     await decoratePlaceholders(section, config);
+//   })
+
+//   return sections.map(decorateSection);
+// }
+async function decorateSections(el, isDoc, config) {
   const selector = isDoc ? 'body > main > div' : ':scope > div';
-  return [...el.querySelectorAll(selector)].map(decorateSection);
+  const sections = [...el.querySelectorAll(selector)];
+  const modifiedSections = await Promise.all(sections.map(async (section) => {
+    const modifiedSection = await decoratePlaceholders(section, config);
+    console.log('modifiedSection', modifiedSection);
+    return modifiedSection;
+  }));
+  console.log('modifiedSections', modifiedSections);
+  // return Promise.all(sections.map(async (section) => {
+  //  section =  await decoratePlaceholders(section, config);
+  //   decorateSection(section);
+  // }));
+  return sections.map(decorateSection);
 }
 
 export async function decorateFooterPromo(doc = document) {
@@ -1194,13 +1223,14 @@ export async function loadArea(area = document) {
   }
   const config = getConfig();
 
-  await decoratePlaceholders(area, config);
+  // await decoratePlaceholders(area, config);
 
   if (isDoc) {
     decorateDocumentExtras();
   }
 
-  const sections = decorateSections(area, isDoc);
+  const sections = await decorateSections(area, isDoc, config);
+  console.log('sections', sections);
 
   const areaBlocks = [];
   for (const section of sections) {
