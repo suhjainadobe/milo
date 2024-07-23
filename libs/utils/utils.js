@@ -727,7 +727,7 @@ async function decoratePlaceholders(area, config) {
   if (!found) return;
   const { replaceText } = await import('../features/placeholders.js');
   el.innerHTML = await replaceText(el.innerHTML, config, regex);
-  return el.innerHTML;
+  return el;
 }
 
 async function loadFooter() {
@@ -799,36 +799,9 @@ function decorateSection(section, idx) {
   };
 }
 
-// function decorateSections(el, isDoc, config) {
-//   const selector = isDoc ? 'body > main > div' : ':scope > div';
-//   return [...el.querySelectorAll(selector)].map({
-//     await decoratePlaceholders(selector, config);
-//     decorateSection
-//   });
-// }
-// async function decorateSections(el, isDoc, config) {
-//   const selector = isDoc ? 'body > main > div' : ':scope > div';
-//   const sections = [...el.querySelectorAll(selector)];
-//   sections.forEach(async (section) => {
-//     await decoratePlaceholders(section, config);
-//   })
-
-//   return sections.map(decorateSection);
-// }
-async function decorateSections(el, isDoc, config) {
+function decorateSections(el, isDoc) {
   const selector = isDoc ? 'body > main > div' : ':scope > div';
-  const sections = [...el.querySelectorAll(selector)];
-  const modifiedSections = await Promise.all(sections.map(async (section) => {
-    const modifiedSection = await decoratePlaceholders(section, config);
-    console.log('modifiedSection', modifiedSection);
-    return modifiedSection;
-  }));
-  console.log('modifiedSections', modifiedSections);
-  // return Promise.all(sections.map(async (section) => {
-  //  section =  await decoratePlaceholders(section, config);
-  //   decorateSection(section);
-  // }));
-  return sections.map(decorateSection);
+  return [...el.querySelectorAll(selector)].map(decorateSection);
 }
 
 export async function decorateFooterPromo(doc = document) {
@@ -1229,15 +1202,20 @@ export async function loadArea(area = document) {
     decorateDocumentExtras();
   }
 
-  const sections = await decorateSections(area, isDoc, config);
+  const sections = decorateSections(area, isDoc, config);
   console.log('sections', sections);
 
   const areaBlocks = [];
   for (const section of sections) {
     const sectionBlocks = await processSection(section, config, isDoc);
-    areaBlocks.push(...sectionBlocks);
+    const modifiedSections = await Promise.all(sectionBlocks.map(async (section) => {
+      const modifiedSection = await decoratePlaceholders(section, config);
+      return modifiedSection;
+    }));
+    areaBlocks.push(...modifiedSections);
 
     areaBlocks.forEach((block) => {
+      console.log('block', block);
       if (!block.className.includes('metadata')) block.dataset.block = '';
     });
   }
