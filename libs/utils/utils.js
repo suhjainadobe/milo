@@ -720,7 +720,6 @@ async function decorateIcons(area, config) {
 }
 
 async function decoratePlaceholders(area, config) {
-  console.log('area', area);
   const el = area.querySelector('main') || area;
   const regex = /{{(.*?)}}|%7B%7B(.*?)%7D%7D/g;
   const found = regex.test(el.innerHTML);
@@ -1203,8 +1202,6 @@ export async function loadArea(area = document) {
   }
 
   const sections = decorateSections(area, isDoc, config);
-  console.log('sections', sections);
-
   const areaBlocks = [];
   for (const section of sections) {
     const sectionBlocks = await processSection(section, config, isDoc);
@@ -1215,7 +1212,6 @@ export async function loadArea(area = document) {
     areaBlocks.push(...modifiedSections);
 
     areaBlocks.forEach((block) => {
-      console.log('block', block);
       if (!block.className.includes('metadata')) block.dataset.block = '';
     });
   }
