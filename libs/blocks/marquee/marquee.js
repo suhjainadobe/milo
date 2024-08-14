@@ -136,4 +136,25 @@ export default async function init(el) {
   if (el.classList.contains('mnemonic-list') && foreground) {
     await loadMnemonicList(foreground);
   }
+
+  const wcWebSharing = document.createElement('wc-web-sharing');
+wcWebSharing.setAttribute('hide-for-desktop', '');
+wcWebSharing.setAttribute('hide-for-desktop-large', '');
+wcWebSharing.setAttribute('link', 'https://creativecloud.adobe.com/cc/discover/article/see-what-s-new-in-photoshop');
+wcWebSharing.setAttribute('data-title', "See what's new in Photoshop.");
+wcWebSharing.classList.add('custom-web-sharing');
+foreground.appendChild(wcWebSharing);
+
+document.querySelector('.custom-web-sharing').addEventListener('click', function() {
+  if (navigator.share) {
+      navigator.share({
+          title: 'See what\'s new in Photoshop',
+          url: 'https://creativecloud.adobe.com/cc/discover/article/see-what-s-new-in-photoshop'
+      }).then(() => {
+          console.log('Thanks for sharing!');
+      }).catch(console.error);
+  } else {
+      alert('Web Share API is not supported in your browser.');
+  }
+});
 }
