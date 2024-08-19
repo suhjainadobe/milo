@@ -138,8 +138,6 @@ export default async function init(el) {
   }
 
   const wcWebSharing = document.createElement('wc-web-sharing');
-wcWebSharing.setAttribute('hide-for-desktop', '');
-wcWebSharing.setAttribute('hide-for-desktop-large', '');
 wcWebSharing.setAttribute('link', 'https://creativecloud.adobe.com/cc/discover/article/see-what-s-new-in-photoshop');
 wcWebSharing.setAttribute('data-title', "See what's new in Photoshop.");
 wcWebSharing.classList.add('custom-web-sharing');
