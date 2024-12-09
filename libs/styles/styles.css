@@ -11,10 +11,10 @@
   --feds-localnav-height: 40px;
 
   /* Colors */
-  --link-color: rgb(39, 77, 234);
-  --link-hover-color: rgb(29, 62, 207);
-  --link-color-dark: rgb(59, 99, 251);
-  --link-hover-color-dark: rgb(39, 77, 234);
+  --link-color: #035fe6;
+  --link-hover-color: #136ff6;
+  --link-color-dark: #1473E6;
+  --link-hover-color-dark: red;
   --background-color: #fff;
   --overlay-background-color: #ffffff20;
   --highlight-background-color: #ffffff40;
