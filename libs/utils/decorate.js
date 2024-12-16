@@ -456,7 +456,7 @@ export function decoratePausePlayWrapper(videoEl, videoAttrs) {
 
 export function decorateAnchorVideo({ src = '', anchorTag }) {
   if (!src.length || !(anchorTag instanceof HTMLElement)) return;
-  const accessibilityEnabled = isVideoAccessible(anchorTag);
+  // const accessibilityEnabled = isVideoAccessible(anchorTag);
   anchorTag.hash = anchorTag.hash.replace(`#${HIDE_CONTROLS}`, '');
   if (anchorTag.closest('.marquee, .aside, .hero-marquee, .quiz-marquee') && !anchorTag.hash) anchorTag.hash = '#autoplay';
   const { dataset, parentElement } = anchorTag;
