@@ -473,9 +473,9 @@ export function decorateAnchorVideo({ src = '', anchorTag }) {
   // }
   anchorTag.insertAdjacentHTML('afterend', video);
   const videoEl = parentElement.querySelector('video');
-  if (indexOfVideo === 1) {
-    firstVideo = videoEl;
-  }
+  // if (indexOfVideo === 1) {
+  //   firstVideo = videoEl;
+  // }
   createIntersectionObserver({
     el: videoEl,
     options: { rootMargin: '1000px' },
@@ -483,12 +483,12 @@ export function decorateAnchorVideo({ src = '', anchorTag }) {
       videoEl?.appendChild(createTag('source', { src, type: 'video/mp4' }));
     },
   });
-  if (accessibilityEnabled) {
-    applyAccessibilityEvents(videoEl);
-    if (!videoEl.controls) {
-      decoratePausePlayWrapper(videoEl, attrs);
-    }
-  }
+  // if (accessibilityEnabled) {
+  //   applyAccessibilityEvents(videoEl);
+  //   if (!videoEl.controls) {
+  //     decoratePausePlayWrapper(videoEl, attrs);
+  //   }
+  // }
   applyHoverPlay(videoEl);
   applyInViewPortPlay(videoEl);
   anchorTag.remove();
