@@ -101,6 +101,10 @@
 
 .hero-marquee .norm p { margin: var(--spacing-xs) 0; }
 
+.hero-marquee h1 {
+  font-weight: 800;
+}
+
 .hero-marquee .main-copy p,
 .hero-marquee .main-copy p:only-child,
 .hero-marquee .main-copy [class^="heading"],
