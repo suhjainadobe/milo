@@ -1,4 +1,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <script src="/libs/scripts/scripts.js" type="module"></script>
-<link rel="stylesheet" href="/libs/styles/styles.css"/>
+<script>
+  const m2Enabled = document.querySelector('meta[name="m2-scripts"]')?.content === 'on';
+  const cssPath = m2Enabled ? '/libs/m2-folder/styles/styles.css' : '/libs/styles/styles.css';
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = cssPath;
+  document.head.appendChild(link);
+
+  if (m2Enabled) {
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('m2-enabled');
+    });
+  }
+</script>
 <link rel="icon" href="data:," size="any"/>
