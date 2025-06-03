@@ -337,7 +337,7 @@
   .section .show-more-button {
     display: flex;
     justify-content: center;
-    padding: 6px 54px;
+    padding: 6px 50px;
     gap: 10px;
     border-radius: 8px;
     background: #F8F8F8;
