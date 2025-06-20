@@ -1,5 +1,6 @@
 import { createTag, getConfig, MILO_EVENTS } from '../../utils/utils.js';
 import { decorateAnchorVideo, syncPausePlayIcon } from '../../utils/decorate.js';
+import { decorateDefaultLinkAnalytics } from '../../martech/attributes.js';
 
 const { miloLibs, codeRoot } = getConfig();
 const base = miloLibs || codeRoot;
@@ -92,6 +93,27 @@ function decorateSlideIndicators(slides, jumpTo) {
     indicatorDots.push(li);
   }
   return indicatorDots;
+}
+
+// ##mweb changes ##
+function updateButtonStates(carouselElements) {
+  const { slides, nextPreviousBtns } = carouselElements;
+  const activeSlideIndex = [...slides].findIndex((slide) => slide.classList.contains('active'));
+  nextPreviousBtns[0].disabled = activeSlideIndex === 0;
+  nextPreviousBtns[0].classList.toggle('disabled', activeSlideIndex === 0);
+  nextPreviousBtns[1].disabled = activeSlideIndex === slides.length - 1;
+  nextPreviousBtns[1].classList.toggle('disabled', activeSlideIndex === slides.length - 1);
+
+  const prevSlide = slides[slides.length - 1];
+  const nextSlide = slides[0];
+  if (activeSlideIndex === 0) {
+    if (prevSlide) prevSlide.classList.add('hide-left-hint');
+  } else if (activeSlideIndex === slides.length - 1) {
+    if (nextSlide) nextSlide.classList.add('hide-left-hint');
+  } else {
+    if (prevSlide) prevSlide.classList.remove('hide-left-hint');
+    if (nextSlide) nextSlide.classList.remove('hide-left-hint');
+  }
 }
 
 function handleNext(nextElement, elements) {
@@ -295,6 +317,23 @@ function moveSlides(event, carouselElements, jumpToIndex) {
   // Update active slide and indicator dot attributes
   activeSlide.classList.add('active');
   setAriaHiddenAndTabIndex(carouselElements, activeSlide);
+
+  // mweb Update heights dynamically
+  if (carouselElements.el.classList.contains('disable-buttons') && window.innerWidth < 900) {
+    const maxHeight = Math.max(...slides.map((slide) => slide.offsetHeight));
+    const nextSlide = handleNext(activeSlide, slides);
+    const prevSlide = handlePrevious(activeSlide, slides);
+    slides.forEach((slide) => {
+      if (slide === nextSlide || slide === prevSlide) {
+        slide.style.height = `${maxHeight - 40}px`;
+        slide.style.transition = 'height 0.2s ease-out';
+      } else {
+        slide.style.height = `${maxHeight}px`;
+        slide.style.transition = 'height 0.2s ease-out';
+      }
+    });
+  }
+
   activeSlideIndicator.classList.add('active');
   if (jumpTo) activeSlideIndicator.setAttribute('tabindex', 0);
   setIndicatorMultiplyer(carouselElements, activeSlideIndicator, event);
@@ -303,6 +342,11 @@ function moveSlides(event, carouselElements, jumpToIndex) {
   for (let i = 2; i <= slides.length; i += 1) {
     referenceSlide = handleNext(referenceSlide, slides);
     referenceSlide.style.order = i;
+  }
+
+  // ##mweb## Update button states after slide movement for mweb
+  if (carouselElements.el.classList.contains('disable-buttons') && window.innerWidth < 900) {
+    updateButtonStates(carouselElements);
   }
 
   /*
@@ -337,23 +381,44 @@ export function getSwipeDirection(swipe, swipeDistance) {
   * Mobile swipe/touch direction detection
   */
 function mobileSwipeDetect(carouselElements) {
-  const { el } = carouselElements;
+  const { el, slides } = carouselElements;
   const swipe = { xMin: 50 };
   /* c8 ignore start */
   el.addEventListener('touchstart', (event) => {
     const touch = event.touches[0];
     swipe.xStart = touch.screenX;
+    swipe.yStart = touch.screenY;
   });
 
   el.addEventListener('touchmove', (event) => {
     const touch = event.touches[0];
     swipe.xEnd = touch.screenX;
+    swipe.yEnd = touch.screenY;
+
+    // Calculate the distance moved
+    const xDistance = Math.abs(swipe.xEnd - swipe.xStart);
+    const yDistance = Math.abs(swipe.yEnd - swipe.yStart);
+
+    // If horizontal movement is greater than vertical, prevent default to stop vertical scrolling
+    if (xDistance > yDistance && xDistance > 10) {
+      event.preventDefault();
+    }
   });
 
   el.addEventListener('touchend', (event) => {
     const swipeDistance = {};
     swipeDistance.xDistance = getSwipeDistance(swipe.xStart, swipe.xEnd);
     carouselElements.direction = getSwipeDirection(swipe, swipeDistance);
+
+    // ##mweb## Get current active slide index for mweb
+    const activeSlideIndex = [...slides].findIndex((slide) => slide.classList.contains('active'));
+    if (carouselElements.el.classList.contains('disable-buttons')
+      && ((activeSlideIndex === 0 && carouselElements.direction === 'right')
+      || (activeSlideIndex === slides.length - 1 && carouselElements.direction === 'left'))) {
+      swipe.xStart = 0;
+      swipe.xEnd = 0;
+      return;
+    }
 
     // reset end swipe values
     swipe.xStart = 0;
@@ -417,6 +482,21 @@ function readySlides(slides, slideContainer) {
       slide.classList.add('reference-slide');
     } else {
       slide.style.order = idx + 2;
+    }
+  });
+}
+
+// mweb-dev changes
+function setEqualHeight(slides) {
+  const maxHeight = Math.max(...slides.map((slide) => slide.offsetHeight));
+  const activeSlide = slides.find((slide) => slide.classList.contains('active')) || slides[0];
+  const nextSlide = handleNext(activeSlide, slides);
+  const prevSlide = handlePrevious(activeSlide, slides);
+  slides.forEach((slide) => {
+    if (slide === nextSlide || slide === prevSlide) {
+      slide.style.height = `${maxHeight - 40}px`;
+    } else {
+      slide.style.height = `${maxHeight}px`;
     }
   });
 }
@@ -494,6 +574,7 @@ export default function init(el) {
   dotsUl.append(...slideIndicators);
   controlsContainer.append(dotsUl);
   nextPreviousContainer.append(...nextPreviousBtns, controlsContainer);
+  decorateDefaultLinkAnalytics(nextPreviousContainer);
   el.append(nextPreviousContainer);
 
   function handleDeferredImages() {
@@ -506,7 +587,18 @@ export default function init(el) {
   parentArea.addEventListener(MILO_EVENTS.DEFERRED, handleDeferredImages, true);
 
   slides[0].classList.add('active');
+  // ##mweb## Update button states after slide movement for mweb
+  function handleEqualHeight() {
+    setEqualHeight(slides);
+    parentArea.removeEventListener(MILO_EVENTS.DEFERRED, handleEqualHeight, true);
+  }
+
+  if (el.classList.contains('disable-buttons') && window.innerWidth < 900) {
+    updateButtonStates(carouselElements);
+    parentArea.addEventListener(MILO_EVENTS.DEFERRED, handleEqualHeight, true);
+  }
   handleChangingSlides(carouselElements);
+
   setAriaHiddenAndTabIndex(carouselElements, slides[0]);
   window.addEventListener('resize', () => setAriaHiddenAndTabIndex(carouselElements));
 
