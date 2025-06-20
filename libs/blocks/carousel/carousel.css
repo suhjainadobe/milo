@@ -27,7 +27,7 @@
   margin-bottom: 1.8rem;
   display: flex;
   flex-flow: column;
-  /* Prevent unwanted touch behaviors during swipes */
+  /* mweb Prevent unwanted touch behaviors during swipes */
   touch-action: pan-y pinch-zoom;
   overscroll-behavior: contain;
 }

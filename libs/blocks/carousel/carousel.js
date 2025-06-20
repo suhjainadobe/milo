@@ -399,7 +399,7 @@ function mobileSwipeDetect(carouselElements) {
     const xDistance = Math.abs(swipe.xEnd - swipe.xStart);
     const yDistance = Math.abs(swipe.yEnd - swipe.yStart);
 
-    // If horizontal movement is greater than vertical, prevent default to stop vertical scrolling
+    // If horizontal movement is greater than vertical, prevent default to stop vertical scrollings
     if (xDistance > yDistance && xDistance > 10) {
       event.preventDefault();
     }
