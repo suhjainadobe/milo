@@ -14,21 +14,16 @@ function dynamicTypekit(kitId, d = document) {
  *
  * @param {Object} locale the locale details
  */
-export default function loadFonts(locale, loadLink) {
+export default function loadFonts(locale, loadStyle) {
   const tkSplit = locale.tk.split('.');
-  // Add preload for Typekit resources
-  const preloadLink = document.createElement('link');
-  preloadLink.rel = 'preload';
-  preloadLink.as = tkSplit[1] === 'css' ? 'style' : 'script';
-  preloadLink.href = `https://use.typekit.net/${locale.tk}`;
-  preloadLink.crossOrigin = 'anonymous';
-  document.head.appendChild(preloadLink);
-
-  preloadLink.onload = () => {
-    if (tkSplit[1] === 'css') {
-      loadLink(`https://use.typekit.net/${locale.tk}`, { rel: 'stylesheet' });
-    } else {
-      dynamicTypekit(locale.tk);
-    }
-  };
+  if (tkSplit[1] === 'css') {
+    return new Promise((resolve) => {
+      // resolve();
+      // loadStyle(`https://use.typekit.net/${locale.tk}`, resolve);
+      loadStyle("https://use.typekit.net/xhd7uve.css", resolve); // adobe-text-pro font auto function
+      // loadStyle("https://use.typekit.net/foi6kkp.css", resolve); // Alyssoy font swap function
+      // loadStyle('https://use.typekit.net/mec0gjj.css', resolve); // presio font fallback function
+    });
+  }
+  return dynamicTypekit(locale.tk);
 }
