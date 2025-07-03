@@ -18,11 +18,15 @@ export default function loadFonts(locale, loadStyle) {
   const tkSplit = locale.tk.split('.');
   if (tkSplit[1] === 'css') {
     return new Promise((resolve) => {
-      // resolve();
       // loadStyle(`https://use.typekit.net/${locale.tk}`, resolve);
-      loadStyle("https://use.typekit.net/xhd7uve.css", resolve); // adobe-text-pro font auto function
-      // loadStyle("https://use.typekit.net/foi6kkp.css", resolve); // Alyssoy font swap function
-      // loadStyle('https://use.typekit.net/mec0gjj.css', resolve); // presio font fallback function
+      const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
+      if (isSafari) {
+        // adobe-text-pro font auto function with swap
+        loadStyle('https://use.typekit.net/xhd7uve.css', resolve);
+      } else {
+        // adobe-text-pro font auto function with optional
+        loadStyle('https://use.typekit.net/cis5vja.css', resolve);
+      }
     });
   }
   return dynamicTypekit(locale.tk);

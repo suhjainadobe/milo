@@ -43,7 +43,7 @@
   /* --body-font-family: 'adobe-clean', sans-serif; */
   /* --body-font-family: 'pressio', sans-serif; */
   /* --body-font-family: 'alasassy-caps', sans-serif; */
-  --body-font-family: 'adobe-text-pro', 'Trebuchet MS', sans-serif;
+  --body-font-family: 'adobe-text-pro', 'Trebuchet MS', sans-serif; /* adobe-text-pro font auto function with optional */
   /* --body-font-family: 'Adobe Clean', adobe-clean, 'Trebuchet MS', sans-serif; */
   --fixed-font-family: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
 
