@@ -1,0 +1,29 @@
+/* stylelint-disable no-descending-specificity */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Ensure videos with reduced motion preference show controls */
+  video[data-reduced-motion="true"] {
+    /* Additional styling for videos in reduced motion mode */
+    border: 1px solid transparent;
+  }
+
+  /* Ensure any remaining autoplaying videos are paused */
+  video[autoplay] {
+    animation-play-state: paused !important;
+  }
+
+  /* Reduce motion for any remaining animated elements */
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+} 

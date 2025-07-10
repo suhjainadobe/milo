@@ -240,6 +240,15 @@ export function getVideoAttrs(hash, dataset) {
   const autoPlayAttrs = 'autoplay muted';
   const playInViewportAttrs = playInViewport ? 'data-play-viewport' : '';
 
+  // Check for reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // If user prefers reduced motion, override autoplay behavior
+  if (prefersReducedMotion && (isAutoplay || isAutoplayOnce)) {
+    // For reduced motion, we always return controls even if autoplay was requested
+    return `${globalAttrs} controls data-reduced-motion="true"`;
+  }
+
   if (isAutoplay && !isAutoplayOnce) {
     return `${globalAttrs} ${autoPlayAttrs} loop ${playInViewportAttrs}`;
   }

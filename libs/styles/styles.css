@@ -1089,3 +1089,6 @@ a.static:active  {
 @media screen and (min-width: 1440px) {
   .con-block.max-width-12-desktop-large .foreground { max-width: 1200px; }
 }
+
+/* Import reduced motion accessibility styles */
+@import 'prefers-reduced-motion.css';
