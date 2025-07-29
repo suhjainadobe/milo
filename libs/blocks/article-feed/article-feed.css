@@ -63,7 +63,7 @@ element {
 .filter {
   position: relative;
   margin-left: 9px;
-  font-size: var(--type-body-xs-size);
+  font-size: var(--type-body-s-size);
   font-weight: 400;
 }
 
