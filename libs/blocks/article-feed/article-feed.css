@@ -80,6 +80,7 @@ element {
   border: 1px solid var(--color-gray-200);
   border-radius: 4px;
   cursor: pointer;
+  text-decoration: underline;
 }
 
 .filter-button[aria-expanded=true] {
