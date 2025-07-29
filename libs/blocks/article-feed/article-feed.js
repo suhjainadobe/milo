@@ -199,7 +199,7 @@ function handleDropdownKeydown(e, firstElement, lastElement, triggerButton) {
     if (shiftKey) {
       if (document.activeElement === firstElement) {
         e.preventDefault();
-        lastElement.focus();
+        triggerButton.focus();
       }
     } else if (document.activeElement === lastElement) {
       e.preventDefault();
@@ -233,7 +233,9 @@ function addFocusTrap(button) {
   if (focusableElements.length === 0) return;
   const firstElement = focusableElements[0];
   const lastElement = focusableElements[focusableElements.length - 1];
-  // firstElement.focus();
+  
+  // No automatic focusing - focus stays on button until user tabs
+  
   dropdown.keydownHandler = (e) => handleDropdownKeydown(e, firstElement, lastElement, button);
   dropdown.addEventListener('keydown', dropdown.keydownHandler);
 }
@@ -375,6 +377,17 @@ async function buildFilter(type, tax, block, config) {
       e.preventDefault();
       toggleMenu(e);
     }
+
+    // Handle Tab into dropdown when open
+    // if (e.key === 'Tab' && !e.shiftKey && button.getAttribute('aria-expanded') === 'true') {
+    //   e.preventDefault();
+    //   const dropdown = document.querySelector(`[aria-labelledby='${button.id}']`);
+    //   const firstElement = dropdown?.querySelector('input, button, a.button');
+    //   if (firstElement) {
+    //     firstElement.focus();
+    //   }
+    // }
+
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       e.preventDefault();
       const allButtons = [...document.querySelectorAll('.filter-button')];
