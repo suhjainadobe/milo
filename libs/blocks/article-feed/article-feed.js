@@ -233,12 +233,7 @@ function addFocusTrap(button) {
   if (focusableElements.length === 0) return;
   const firstElement = focusableElements[0];
   const lastElement = focusableElements[focusableElements.length - 1];
-  
-  // Add small delay to allow screen readers to announce aria-expanded state change
-  setTimeout(() => {
-    firstElement.focus();
-  }, 100);
-  
+  firstElement.focus();
   dropdown.keydownHandler = (e) => handleDropdownKeydown(e, firstElement, lastElement, button);
   dropdown.addEventListener('keydown', dropdown.keydownHandler);
 }
@@ -395,10 +390,8 @@ async function buildFilter(type, tax, block, config) {
   });
 
   const dropdown = createTag('div', { class: 'filter-dropdown' });
-  dropdown.id = `${type}-filter-panel`;
   dropdown.setAttribute('aria-labelledby', `${type}-filter-button`);
-  // dropdown.setAttribute('role', 'region');
-  dropdown.setAttribute('aria-label', `${tax.getCategoryTitle(type)} filter options`);
+  dropdown.setAttribute('aria-modal', 'true');
 
   const SEARCH_ICON = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
     <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
