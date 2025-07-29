@@ -391,7 +391,7 @@ async function buildFilter(type, tax, block, config) {
 
   const dropdown = createTag('div', { class: 'filter-dropdown' });
   dropdown.setAttribute('aria-labelledby', `${type}-filter-button`);
-  // dropdown.setAttribute('role', 'menu');
+  dropdown.setAttribute('role', 'menu');
   dropdown.setAttribute('aria-modal', 'true');
 
   const SEARCH_ICON = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
