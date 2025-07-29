@@ -239,9 +239,9 @@ function addFocusTrap(button) {
 }
 
 function toggleMenu(e) {
-  const button = e.target.closest('[role=button]');
-  const expanded = button.getAttribute('aria-expanded');
-  if (expanded === 'true') {
+  const button = e.currentTarget;
+  const expanded = button.getAttribute('aria-expanded') === 'true';
+  if (expanded) {
     closeMenu(button);
     disableSearch(button.id);
     closeCurtain();
@@ -367,6 +367,7 @@ async function buildFilter(type, tax, block, config) {
   button.setAttribute('tabindex', '0');
   button.setAttribute('aria-haspopup', 'true');
   button.setAttribute('aria-expanded', 'false');
+  button.setAttribute('aria-controls', `${type}-filter-panel`);
   button.textContent = tax.getCategoryTitle(type);
   button.addEventListener('click', toggleMenu);
   button.addEventListener('keydown', (e) => {
@@ -390,7 +391,7 @@ async function buildFilter(type, tax, block, config) {
 
   const dropdown = createTag('div', { class: 'filter-dropdown' });
   dropdown.setAttribute('aria-labelledby', `${type}-filter-button`);
-  dropdown.setAttribute('role', 'menu');
+  // dropdown.setAttribute('role', 'menu');
   dropdown.setAttribute('aria-modal', 'true');
 
   const SEARCH_ICON = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
