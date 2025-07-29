@@ -63,7 +63,7 @@ element {
 .filter {
   position: relative;
   margin-left: 9px;
-  font-size: var(--type-body-s-size);
+  font-size: var(--body-font-size-xs);
   font-weight: 400;
 }
 
@@ -81,6 +81,7 @@ element {
   border-radius: 4px;
   cursor: pointer;
   text-decoration: underline;
+  font-size: var(--type-body-s-size);
 }
 
 .filter-button[aria-expanded=true] {
