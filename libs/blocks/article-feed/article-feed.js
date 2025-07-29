@@ -169,8 +169,8 @@ function openMenu(el) {
 }
 
 function navigateFilterButtons(currentButton, forward) {
-  const allFilterButtons = document.querySelectorAll('.filter-button');
-  const currentIndex = Array.from(allFilterButtons).indexOf(currentButton);
+  const allFilterButtons = [...document.querySelectorAll('.filter-button')];
+  const currentIndex = allFilterButtons.indexOf(currentButton);
   if (currentIndex === -1) return;
   let nextIndex;
   if (forward) {
@@ -343,7 +343,7 @@ function buildFilterOption(itemName, type) {
 
   const option = document.createElement('li');
   option.classList.add('filter-option', `filter-option-${type}`);
-  option.setAttribute('role', 'none');
+  // option.setAttribute('role', 'none');
 
   const checkbox = document.createElement('input');
   checkbox.id = name;
@@ -377,8 +377,8 @@ async function buildFilter(type, tax, block, config) {
     }
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       e.preventDefault();
-      const allButtons = document.querySelectorAll('.filter-button');
-      const currentIndex = Array.from(allButtons).indexOf(button);
+      const allButtons = [...document.querySelectorAll('.filter-button')];
+      const currentIndex = allButtons.indexOf(button);
       let nextIndex;
       if (e.key === 'ArrowRight') {
         nextIndex = (currentIndex + 1) % allButtons.length;
