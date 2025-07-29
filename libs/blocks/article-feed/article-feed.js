@@ -361,7 +361,7 @@ function buildFilterOption(itemName, type) {
 
 async function buildFilter(type, tax, block, config) {
   const container = createTag('div', { class: 'filter' });
-  const button = document.createElement('a');
+  const button = document.createElement('button');
   button.classList.add('filter-button');
   button.id = `${type}-filter-button`;
   button.setAttribute('tabindex', '0');
