@@ -441,13 +441,13 @@ async function buildFilter(type, tax, block, config) {
 
   const footer = createTag('div', { class: 'filter-dropdown-footer' });
 
-  const resetBtn = document.createElement('a');
+  const resetBtn = document.createElement('button');
   resetBtn.classList.add('button', 'small', 'reset');
   resetBtn.setAttribute('tabindex', '0');
   resetBtn.textContent = await replacePlaceholder('reset');
   resetBtn.addEventListener('click', clearFilters);
 
-  const applyBtn = document.createElement('a');
+  const applyBtn = document.createElement('button');
   applyBtn.classList.add('button', 'small', 'apply');
   applyBtn.setAttribute('tabindex', '0');
   applyBtn.textContent = await replacePlaceholder('apply');
