@@ -90,11 +90,11 @@ element {
 }
 
 .filter-button[aria-expanded=true]+.filter-dropdown {
-  visibility: visible;
+  display: block;
 }
 
 .filter-button[aria-expanded=false]+.filter-dropdown {
-  visibility: hidden;
+  display: none;
 }
 
 .filter-button:hover,

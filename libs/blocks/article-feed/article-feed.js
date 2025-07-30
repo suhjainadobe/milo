@@ -219,11 +219,6 @@ function handleDropdownKeydown(e, firstElement, lastElement, triggerButton) {
     e.preventDefault();
     document.activeElement.checked = !document.activeElement.checked;
   }
-
-  if ((key === 'Enter' || key === ' ') && document.activeElement.matches('a.button')) {
-    e.preventDefault();
-    document.activeElement.click();
-  }
 }
 
 function addFocusTrap(button) {
@@ -233,7 +228,7 @@ function addFocusTrap(button) {
     dropdown.removeEventListener('keydown', dropdown.keydownHandler);
   }
   const focusableElements = dropdown.querySelectorAll(
-    'input, button, a.button',
+    'input, button',
   );
   if (focusableElements.length === 0) return;
   const firstElement = focusableElements[0];
@@ -404,6 +399,7 @@ async function buildFilter(type, tax, block, config) {
   });
 
   const dropdown = createTag('div', { class: 'filter-dropdown' });
+  dropdown.id = `${type}-filter-panel`;
   dropdown.setAttribute('aria-labelledby', `${type}-filter-button`);
   dropdown.setAttribute('aria-modal', 'true');
 
