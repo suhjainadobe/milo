@@ -179,6 +179,7 @@ function navigateFilterButtons(currentButton, forward) {
     nextIndex = currentIndex === 0 ? allFilterButtons.length - 1 : currentIndex - 1;
   }
   const nextButton = allFilterButtons[nextIndex];
+  allFilterButtons[nextIndex].focus();
   closeMenu(currentButton);
   disableSearch(currentButton.id);
   openMenu(nextButton);
@@ -380,7 +381,6 @@ async function buildFilter(type, tax, block, config) {
 
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       e.preventDefault();
-      
       if (button.getAttribute('aria-expanded') === 'true') {
         // If dropdown is open, navigate between filter tabs
         navigateFilterButtons(button, e.key === 'ArrowRight');
