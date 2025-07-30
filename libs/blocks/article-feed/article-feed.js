@@ -179,9 +179,13 @@ function navigateFilterButtons(currentButton, forward) {
     nextIndex = currentIndex === 0 ? allFilterButtons.length - 1 : currentIndex - 1;
   }
   const nextButton = allFilterButtons[nextIndex];
-  allFilterButtons[nextIndex].focus();
+
+  // Close current dropdown first
   closeMenu(currentButton);
   disableSearch(currentButton.id);
+
+  // Then focus and open the next one
+  nextButton.focus();
   openMenu(nextButton);
   enableSearch(nextButton.id);
 }
