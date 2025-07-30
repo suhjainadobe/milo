@@ -233,9 +233,9 @@ function addFocusTrap(button) {
   if (focusableElements.length === 0) return;
   const firstElement = focusableElements[0];
   const lastElement = focusableElements[focusableElements.length - 1];
-  
+
   // No automatic focusing - focus stays on button until user tabs
-  
+
   dropdown.keydownHandler = (e) => handleDropdownKeydown(e, firstElement, lastElement, button);
   dropdown.addEventListener('keydown', dropdown.keydownHandler);
 }
@@ -378,27 +378,24 @@ async function buildFilter(type, tax, block, config) {
       toggleMenu(e);
     }
 
-    // Handle Tab into dropdown when open
-    // if (e.key === 'Tab' && !e.shiftKey && button.getAttribute('aria-expanded') === 'true') {
-    //   e.preventDefault();
-    //   const dropdown = document.querySelector(`[aria-labelledby='${button.id}']`);
-    //   const firstElement = dropdown?.querySelector('input, button, a.button');
-    //   if (firstElement) {
-    //     firstElement.focus();
-    //   }
-    // }
-
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       e.preventDefault();
-      const allButtons = [...document.querySelectorAll('.filter-button')];
-      const currentIndex = allButtons.indexOf(button);
-      let nextIndex;
-      if (e.key === 'ArrowRight') {
-        nextIndex = (currentIndex + 1) % allButtons.length;
+      
+      if (button.getAttribute('aria-expanded') === 'true') {
+        // If dropdown is open, navigate between filter tabs
+        navigateFilterButtons(button, e.key === 'ArrowRight');
       } else {
-        nextIndex = currentIndex === 0 ? allButtons.length - 1 : currentIndex - 1;
+        // If dropdown is closed, just move focus between buttons
+        const allButtons = [...document.querySelectorAll('.filter-button')];
+        const currentIndex = allButtons.indexOf(button);
+        let nextIndex;
+        if (e.key === 'ArrowRight') {
+          nextIndex = (currentIndex + 1) % allButtons.length;
+        } else {
+          nextIndex = currentIndex === 0 ? allButtons.length - 1 : currentIndex - 1;
+        }
+        allButtons[nextIndex].focus();
       }
-      allButtons[nextIndex].focus();
     }
   });
 
