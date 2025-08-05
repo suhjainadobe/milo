@@ -307,8 +307,15 @@ function applyCurrentFilters(block, close) {
     Object.keys(filters).forEach((filter) => {
       filters[filter].forEach((f) => {
         const selectedFilter = buildSelectedFilter(f);
-        selectedFilter.addEventListener('click', (e) => {
+        const handleClearFilter = (e) => {
           clearFilter(e, block);
+        };
+        selectedFilter.addEventListener('click', handleClearFilter);
+        selectedFilter.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClearFilter(e);
+          }
         });
         selectedFilters.append(selectedFilter);
       });
@@ -376,6 +383,15 @@ async function buildFilter(type, tax, block, config) {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       toggleMenu(e);
+    }
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      if (button.getAttribute('aria-expanded') === 'true') {
+        closeMenu(button);
+        disableSearch(button.id);
+        closeCurtain();
+      }
     }
 
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
@@ -624,11 +640,19 @@ async function decorateFeedFilter(articleFeedEl) {
 
   const clearBtn = document.createElement('a');
   clearBtn.classList.add('button', 'small', 'clear');
+  clearBtn.href = '#';
   clearBtn.textContent = await replacePlaceholder('clear-all');
-  clearBtn.addEventListener(
-    'click',
-    (e) => clearFilters(e, articleFeedEl),
-  );
+  const handleClearFilters = (e) => {
+    e.preventDefault();
+    clearFilters(e, articleFeedEl);
+  };
+  clearBtn.addEventListener('click', handleClearFilters);
+  clearBtn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClearFilters(e);
+    }
+  });
 
   selectedWrapper.append(selectedText, selectedCategories, clearBtn);
   selectedContainer.append(selectedWrapper);
