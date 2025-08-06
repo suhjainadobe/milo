@@ -435,7 +435,7 @@ async function buildFilter(type, tax, block, config) {
   options.classList.add('filter-options');
   options.setAttribute('data-type', type);
   // options.setAttribute('role', 'group');
-  options.setAttribute('aria-label', `${tax.getCategoryTitle(type)} filters`);
+  options.setAttribute('aria-label', `${tax.getCategoryTitle(type)} {{filters}}`);
 
   const category = tax.getCategory(tax[`${type.toUpperCase()}`]);
 
