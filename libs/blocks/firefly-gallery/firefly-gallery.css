@@ -128,6 +128,85 @@
   animation: fade-in 0.5s ease-in-out;
 }
 
+/* Video item specific styles */
+.firefly-gallery-video-item {
+  cursor: pointer;
+}
+
+/* Video item before user interaction */
+.firefly-gallery-video-item:not([data-user-interacted]) {
+  cursor: pointer;
+}
+
+.firefly-gallery-video-item:not([data-user-interacted]):hover {
+  cursor: pointer;
+}
+
+.firefly-gallery-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* Play icon styles - positioned in top-left corner */
+.firefly-gallery-play-icon {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 32px;
+  height: 32px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.firefly-gallery-play-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Video item hover effects - play icon fades out when hovering */
+.firefly-gallery-video-item:hover .firefly-gallery-play-icon {
+  opacity: 0;
+}
+
+/* Video item indicator for mobile/touch devices */
+.video-item::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  z-index: 4;
+  animation: pulse-indicator 2s infinite;
+}
+
+@keyframes pulse-indicator {
+  0%, 70%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
 @keyframes fade-in {
   0% {
     opacity: 0;
@@ -141,7 +220,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 /* Overlay and prompt styles */
@@ -312,5 +391,25 @@
     -webkit-line-clamp: 2;
     line-height: 1.2;
     max-height: 2.4em;
+  }
+  
+  /* Adjust video elements for mobile */
+  .firefly-gallery-play-icon {
+    width: 28px;
+    height: 28px;
+    top: 8px;
+    left: 8px;
+  }
+  
+  .firefly-gallery-play-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .video-item::after {
+    width: 6px;
+    height: 6px;
+    top: 6px;
+    right: 6px;
   }
 }

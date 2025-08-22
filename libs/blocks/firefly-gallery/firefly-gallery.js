@@ -4,6 +4,7 @@ const FIREFLY_API_URL =
   'https://community-hubs.adobe.io/api/v2/ff_community/assets';
 const API_PARAMS =
   '?size=16&sort=updated_desc&include_pending_assets=false&category_id=text2Image&cursor=';
+const API_PARAMS_VIDEO = '?page_size=20&sort=updated_desc&include_pending_assets=false&category_id=VideoGeneration&cursor=';
 const API_KEY = 'alfred-community-hubs';
 const RENDITION_SIZE = 350;
 
@@ -25,6 +26,28 @@ async function fetchFireflyImages() {
     return data._embedded.assets || [];
   } catch (error) {
     console.error('Error fetching Firefly images:', error);
+    return [];
+  }
+}
+
+async function fetchFireflyVideos() {
+  try {
+    console.log('Fetching Firefly Video...');
+    const response = await fetch(`${FIREFLY_API_URL}${API_PARAMS_VIDEO}`, {
+      headers: {
+        'x-api-key': API_KEY,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Firefly API response for Video:', data);
+    return data._embedded.assets || [];
+  } catch (error) {
+    console.error('Error fetching Firefly Video:', error);
     return [];
   }
 }
@@ -130,10 +153,11 @@ function loadImageIntoSkeleton(
   imageUrl,
   altText,
   promptText,
-  userInfo = {}
+  userInfo = {},
+  assetData = {},
 ) {
   return new Promise((resolve) => {
-    console.log('Loading image:', imageUrl);
+    console.log(`Loading ${assetData.type || 'image'}:`, imageUrl);
 
     const img = createTag('img', {
       src: imageUrl,
@@ -141,10 +165,79 @@ function loadImageIntoSkeleton(
       loading: 'lazy',
     });
 
-    const imageContainer = createTag('div', {
+    const mediaContainer = createTag('div', {
       class: 'firefly-gallery-image',
     });
-    imageContainer.appendChild(img);
+
+    // Add asset type to container for styling
+    if (assetData.type === 'video') {
+      mediaContainer.classList.add('firefly-gallery-video-item');
+      skeletonItem.classList.add('video-item');
+    }
+
+    mediaContainer.appendChild(img);
+
+    // Add video element for video assets (hidden initially)
+    if (assetData.type === 'video' && assetData.videoUrl) {
+      const video = createTag('video', {
+        src: assetData.videoUrl,
+        class: 'firefly-gallery-video',
+        muted: true,
+        loop: true,
+        preload: 'none',
+      });
+
+      video.addEventListener('loadeddata', () => {
+        console.log('Video loaded:', assetData.videoUrl);
+      });
+
+      video.addEventListener('error', (e) => {
+        console.error('Video loading error:', e);
+      });
+
+      mediaContainer.appendChild(video);
+
+      // Add play icon indicator with white SVG
+      const playIcon = createTag('div', {
+        class: 'firefly-gallery-play-icon',
+      });
+      
+      // Use inline white SVG for better reliability
+      playIcon.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      `;
+      
+      mediaContainer.appendChild(playIcon);
+
+      // Add hover event listeners for video playback (hover-only behavior)
+      let hoverTimeout;
+
+      mediaContainer.addEventListener('mouseenter', () => {
+        // Clear any existing timeout
+        clearTimeout(hoverTimeout);
+        
+        // Start video immediately on hover
+        img.style.opacity = '0';
+        playIcon.style.opacity = '0';
+        video.style.opacity = '1';
+        video.currentTime = 0;
+        video.play().catch((err) => {
+          console.warn('Video play failed:', err);
+        });
+      });
+
+      mediaContainer.addEventListener('mouseleave', () => {
+        // Stop video immediately when hover ends
+        clearTimeout(hoverTimeout);
+        video.pause();
+        video.currentTime = 0;
+        img.style.opacity = '1';
+        playIcon.style.opacity = '1';
+        video.style.opacity = '0';
+      });
+    }
 
     // Add prompt overlay
     if (promptText) {
@@ -192,33 +285,67 @@ function loadImageIntoSkeleton(
       );
 
       overlay.appendChild(promptElement);
-      imageContainer.appendChild(overlay);
+      mediaContainer.appendChild(overlay);
     }
 
     // Handle image load event
-    console.log('Image loaded successfully:', imageUrl);
+    console.log(`${assetData.type || 'Image'} loaded successfully:`, imageUrl);
 
     // Add loaded class to trigger transition
     skeletonItem.classList.add('loaded');
 
-    // Replace skeleton wrapper with actual image after animation
+    // Replace skeleton wrapper with actual media after animation
     const skeletonWrapper = skeletonItem.querySelector('.skeleton-wrapper');
     if (skeletonWrapper) {
-      skeletonItem.replaceChild(imageContainer, skeletonWrapper);
+      skeletonItem.replaceChild(mediaContainer, skeletonWrapper);
     } else {
       // Fallback if wrapper not found
       skeletonItem.innerHTML = '';
-      skeletonItem.appendChild(imageContainer);
+      skeletonItem.appendChild(mediaContainer);
     }
 
     resolve();
   });
 }
 
+function constructVideoUrl(assetId) {
+  return `https://cdn.cp.adobe.io/content/2/dcx/${assetId}/content/manifest/version/0/component/path/output/resource`;
+}
+
+async function fetchMixedAssets() {
+  try {
+    console.log('Fetching mixed Firefly assets...');
+    
+    // Fetch both images and videos concurrently
+    const [imageAssets, videoAssets] = await Promise.all([
+      fetchFireflyImages(),
+      fetchFireflyVideos()
+    ]);
+
+    // Mark assets with their type
+    const markedImages = imageAssets.map(asset => ({ ...asset, type: 'image' }));
+    const markedVideos = videoAssets.map(asset => ({ ...asset, type: 'video' }));
+
+    // Combine and shuffle the arrays for a mixed layout
+    const combinedAssets = [...markedImages, ...markedVideos];
+
+    for (let i = combinedAssets.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [combinedAssets[i], combinedAssets[j]] = [combinedAssets[j], combinedAssets[i]];
+    }
+
+    console.log(`Fetched ${imageAssets.length} images and ${videoAssets.length} videos, mixed into ${combinedAssets.length} total assets`);
+    return combinedAssets;
+  } catch (error) {
+    console.error('Error fetching mixed assets:', error);
+    return [];
+  }
+}
+
 async function loadFireflyImages(skeletonItems) {
   try {
-    // Fetch assets from Firefly API
-    const assets = await fetchFireflyImages();
+    // Fetch mixed assets from Firefly API
+    const assets = await fetchMixedAssets();
 
     if (!assets || !assets.length) {
       console.warn('No assets returned from Firefly API');
@@ -226,19 +353,19 @@ async function loadFireflyImages(skeletonItems) {
     }
 
     console.log(
-      `Loading ${assets.length} Firefly images into ${skeletonItems.length} placeholders`
+      `Loading ${assets.length} Firefly assets into ${skeletonItems.length} placeholders`
     );
 
     // Get current locale or fallback to default
     const locale = getConfig().locale?.ietf || 'en-US';
 
-    // Load images into skeleton items
+    // Load assets into skeleton items
     const loadPromises = skeletonItems.map((item, index) => {
       if (index >= assets.length) return Promise.resolve();
 
       const asset = assets[index];
       const imageUrl = getImageRendition(asset);
-      const altText = asset.title || 'Firefly generated image';
+      const altText = asset.title || `Firefly generated ${asset.type}`;
 
       // Get localized prompt text
       let promptText = '';
@@ -252,10 +379,10 @@ async function loadFireflyImages(skeletonItems) {
           Object.values(asset.custom.input['firefly#prompts'])[0] ||
           // Final fallback
           asset.title ||
-          'Firefly generated image';
+          `Firefly generated ${asset.type}`;
       } else {
         // Use title as fallback
-        promptText = asset.title || 'Firefly generated image';
+        promptText = asset.title || `Firefly generated ${asset.type}`;
       }
 
       // Get user info
@@ -282,13 +409,23 @@ async function loadFireflyImages(skeletonItems) {
         }
       }
 
-      console.log(`Loading image ${index + 1}/${assets.length}: ${imageUrl}`);
+      // Prepare asset data for video handling
+      const assetData = {
+        type: asset.type,
+        videoUrl: asset.type === 'video' ? constructVideoUrl(asset.id) : null,
+        fireflyUrl: asset.type === 'video'
+          ? `https://firefly.adobe.com/open?assetOrigin=community&assetType=VideoGeneration&id=${asset.id}`
+          : null,
+      };
+
+      console.log(`Loading ${asset.type} ${index + 1}/${assets.length}: ${imageUrl}`);
       return loadImageIntoSkeleton(
         item,
         imageUrl,
         altText,
         promptText,
-        userInfo
+        userInfo,
+        assetData
       );
     });
 
