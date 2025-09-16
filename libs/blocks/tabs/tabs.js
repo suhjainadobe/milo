@@ -186,7 +186,10 @@ function initTabs(elm, config, rootElem) {
     });
   });
   tabs.forEach((tab) => {
-    tab.addEventListener('click', (e) => changeTabs(e, config));
+    tab.addEventListener('click', changeTabs);
+    tab.addEventListener('focus', () => {
+      scrollTabIntoView(tab);
+    });
   });
   if (config) configTabs(config, rootElem);
 }
@@ -278,6 +281,37 @@ const handlePillSize = (pill) => {
   return `${sizes[size]?.[0] ?? sizes[1]}-pill`;
 };
 
+const calculateSegmentedControlWidth = (tabListContainer) => {
+  return;
+  if (!tabListContainer.closest('.tabs.segmented-control')) return;
+
+  // Wait for the next frame to ensure buttons are fully rendered
+  requestAnimationFrame(() => {
+    const buttons = tabListContainer.querySelectorAll('button');
+    if (!buttons.length) return;
+
+    let totalButtonsWidth = 0;
+
+    // Calculate total width of all buttons
+    buttons.forEach((button) => {
+      const computedStyle = window.getComputedStyle(button);
+      const buttonWidth = button.offsetWidth;
+      const marginLeft = parseFloat(computedStyle.marginLeft) || 0;
+      const marginRight = parseFloat(computedStyle.marginRight) || 0;
+      totalButtonsWidth += buttonWidth + marginLeft + marginRight;
+    });
+
+    // Add container padding (1px on each side as per CSS)
+    const containerPadding = 2; // 1px left + 1px right
+    const totalCalculatedWidth = totalButtonsWidth + containerPadding;
+
+    // Ensure minimum width is 300px
+    const minWidth = Math.max(totalCalculatedWidth, 300);
+
+    tabListContainer.style.minWidth = `${minWidth}px`;
+  });
+};
+
 export function assignLinkedTabs(linkedTabsList, metaSettings, id, val) {
   if (!metaSettings.link || !id || !val || !linkedTabsList) return;
   const { link } = metaSettings;
@@ -337,7 +371,14 @@ const init = (block) => {
   const tabListItems = rows[0].querySelectorAll(':scope li');
   if (tabListItems) {
     const pillVariant = [...block.classList].find((variant) => variant.includes('pill'));
-    const btnClass = pillVariant ? handlePillSize(pillVariant) : 'heading-xs';
+    let btnClass;
+    if (pillVariant) {
+      btnClass = handlePillSize(pillVariant);
+    } else if (block.classList.contains('segmented-control')) {
+      btnClass = 'heading-xxs';
+    } else {
+      btnClass = 'heading-xs';
+    }
     tabListItems.forEach((item, i) => {
       const tabName = config.id ? i + 1 : getStringKeyName(item.textContent);
       const controlId = `tab-panel-${tabId}-${tabName}`;
@@ -370,13 +411,19 @@ const init = (block) => {
     });
     tabListItems[0].parentElement.remove();
     tabListContainer.dataset.pretext = config.pretext;
+
+    // Calculate and apply dynamic width for segmented-control tabs
+    calculateSegmentedControlWidth(tabListContainer);
   }
 
   // Tab Paddles
   const paddleLeft = createTag('button', { class: 'paddle paddle-left', disabled: '', 'aria-hidden': true, 'aria-label': 'Scroll tabs to left' }, PADDLE);
   const paddleRight = createTag('button', { class: 'paddle paddle-right', disabled: '', 'aria-hidden': true, 'aria-label': 'Scroll tabs to right' }, PADDLE);
-  tabList.insertAdjacentElement('afterend', paddleRight);
-  block.prepend(paddleLeft);
+  // For segmented-control variant, do not add paddles relative to tab-list-container
+  if (!block.classList.contains('segmented-control')) {
+    tabList.insertAdjacentElement('afterend', paddleRight);
+    block.prepend(paddleLeft);
+  }
   initPaddles(tabList, paddleLeft, paddleRight, isRadio);
 
   // Tab Sections
