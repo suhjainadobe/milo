@@ -54,15 +54,54 @@ function focusAfterModalClose(modal) {
   const isGeoPopup = modal?.id === LOCALE_MODAL_ID;
   const onetrustBanner = (isDeepLink || isGeoPopup) && document.querySelector('#onetrust-banner-sdk');
   const geoPopupFocus = !isGeoPopup && document.querySelector(`.dialog-modal#${LOCALE_MODAL_ID} a.con-button`);
-  const toFocus = geoPopupFocus || onetrustBanner || null;
+
+  // When georouting modal closes, look for the original trigger element that was marked
+  // before georouting interrupted the flow
+  let originalTrigger = null;
+  if (isGeoPopup) {
+    originalTrigger = document.querySelector('[data-is-modal-trigger="true"]');
+  }
+
+  const toFocus = originalTrigger || geoPopupFocus || onetrustBanner || null;
   toFocus?.focus();
+
+  // Clean up the trigger attribute if we found and focused the original trigger
+  if (originalTrigger) {
+    originalTrigger.removeAttribute('data-is-modal-trigger');
+  }
+
   isDeepLink = false;
 
   return toFocus;
 }
 
-export async function closeModal(modal) {
-  if (typeof modal.closeCallback === 'function') await modal.closeCallback(modal);
+function focusTriggerElement(modalId) {
+  const triggerElement = document.querySelector(
+    `[data-modal-hash="#${modalId}"][data-is-modal-trigger="true"]`,
+  );
+  if (triggerElement) {
+    triggerElement.focus();
+    triggerElement.removeAttribute('data-is-modal-trigger');
+    return;
+  }
+
+  // Fallback focus options for deep links
+  if (!isDeepLink) return;
+  const fallbackSelectors = [
+    `[data-modal-hash="#${modalId}"]`,
+    `a[data-modal-id="${modalId}"].con-button`,
+  ];
+
+  for (const selector of fallbackSelectors) {
+    const element = document.querySelector(selector);
+    if (element) {
+      element.focus();
+      break;
+    }
+  }
+}
+
+export function closeModal(modal) {
   const { id } = modal;
   const closeEvent = new Event('milo:modal:closed');
   window.dispatchEvent(closeEvent);
@@ -91,7 +130,7 @@ export async function closeModal(modal) {
       }
       mod.remove();
     }
-    document.querySelector(`[data-modal-hash="#${mod.id}"]`)?.focus();
+    focusTriggerElement(mod.id);
   });
 
   if (!document.querySelectorAll('.modal-curtain').length) {
@@ -114,7 +153,7 @@ export async function closeModal(modal) {
     return;
   }
 
-  document.querySelector(`a[data-modal-id="${id}"].con-button`)?.focus();
+  focusTriggerElement(id);
 }
 
 function isElementInView(element) {
@@ -134,7 +173,6 @@ function getCustomModal(custom, dialog) {
   if (custom.title) dialog.setAttribute('aria-label', custom.title);
   if (custom.class) dialog.classList.add(custom.class);
   if (custom.closeEvent) dialog.addEventListener(custom.closeEvent, () => closeModal(dialog));
-  if (custom.closeCallback) dialog.closeCallback = custom.closeCallback;
   dialog.append(custom.content);
 }
 
@@ -169,6 +207,7 @@ export async function getModal(details, custom) {
   if (!((details?.path && details?.id) || custom)) return null;
   const { id, deepLink } = details || custom;
   if (id !== LOCALE_MODAL_ID) isDeepLink = deepLink;
+  if (!isDeepLink) document.activeElement.dataset.isModalTrigger = 'true';
 
   dialogLoadingSet.add(id);
   const dialog = createTag('div', { class: 'dialog-modal', id, role: 'dialog', 'aria-modal': true });
