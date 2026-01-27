@@ -572,11 +572,7 @@ async function decorateArticleFeed(
   } else if (blogIndex.config.selectedProducts || blogIndex.config.selectedIndustries) {
     // no user filtered results were found
     spinner.remove();
-    const alertWrapper = createTag('div', {
-      role: 'alert',
-      'aria-live': 'assertive',
-      'aria-atomic': 'true',
-    });
+    const alertWrapper = createTag('div');
     const noMatches = document.createElement('p');
     noMatches.innerHTML = `<strong>${await replacePlaceholder('no-matches')}</strong>`;
     const userHelp = document.createElement('p');
