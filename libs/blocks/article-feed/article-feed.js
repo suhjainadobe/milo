@@ -318,6 +318,7 @@ function applyCurrentFilters(block, close) {
     });
     selectedContainer.classList.remove('hide');
   } else {
+    selectedContainer.textContent = 'filters removed';
     selectedContainer.classList.add('hide');
   }
   if (block) {
