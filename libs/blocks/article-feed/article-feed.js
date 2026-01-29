@@ -318,7 +318,7 @@ function applyCurrentFilters(block, close) {
     });
     selectedContainer.classList.remove('hide');
   } else {
-    const ariaLive = document.querySelector('.article-feed .sr-only[aria-live]');
+    const ariaLive = document.querySelector('.article-feed-aria-live');
     if (ariaLive) {
       ariaLive.textContent = '';
       setTimeout(() => { ariaLive.textContent = 'filters removed'; }, 100);
@@ -635,13 +635,16 @@ async function decorateFeedFilter(articleFeedEl) {
 
   parent.parentElement.insertBefore(filterContainer, parent);
 
-  // ARIA LIVE CONTAINER for screen reader announcements
-  const ariaLiveContainer = createTag('div', {
-    class: 'sr-only',
-    'aria-live': 'polite',
-    role: 'status',
-  });
-  parent.parentElement.insertBefore(ariaLiveContainer, parent);
+  // ARIA LIVE CONTAINER for screen reader announcements (outside article-feed to survive rebuilds)
+  let ariaLiveContainer = document.querySelector('.article-feed-aria-live');
+  if (!ariaLiveContainer) {
+    ariaLiveContainer = createTag('div', {
+      class: 'article-feed-aria-live sr-only',
+      'aria-live': 'polite',
+      role: 'status',
+    });
+    parent.parentElement.insertBefore(ariaLiveContainer, parent);
+  }
 
   // SELECTED CONTAINER
   const selectedContainer = createTag('div', { class: 'selected-container hide' });
