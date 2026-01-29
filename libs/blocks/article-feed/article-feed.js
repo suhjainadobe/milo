@@ -634,7 +634,7 @@ async function decorateFeedFilter(articleFeedEl) {
   // SELECTED CONTAINER
   const selectedContainer = createTag('div', {
     class: 'selected-container hide',
-    'aria-live': 'polite',
+    'aria-live': 'assertive',
     'aria-atomic': 'true',
   });
   const selectedWrapper = createTag('div');
