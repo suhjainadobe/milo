@@ -155,14 +155,6 @@ function closeCurtain() {
   window.removeEventListener('click', closeOnDocClick);
 }
 
-function announceFilterRemoval(isMultiple) {
-  const liveRegion = document.querySelector('.selected-container .filter-announcer');
-  if (liveRegion) {
-    liveRegion.textContent = isMultiple ? 'filters removed' : 'filter removed';
-    setTimeout(() => { liveRegion.textContent = ''; }, 1000);
-  }
-}
-
 function openCurtain() {
   const curtain = document.querySelector('.filter-curtain');
   curtain.classList.remove('hide');
@@ -273,7 +265,6 @@ function clearFilter(e, block) {
   if (checked) { checked.checked = false; }
   delete blogIndex.config.selectedProducts;
   delete blogIndex.config.selectedIndustries;
-  announceFilterRemoval(false);
   // eslint-disable-next-line no-use-before-define
   applyCurrentFilters(block);
 }
@@ -349,7 +340,6 @@ function clearFilters(e, block) {
   });
   delete blogIndex.config.selectedProducts;
   delete blogIndex.config.selectedIndustries;
-  announceFilterRemoval(true);
   applyCurrentFilters(block);
 }
 
@@ -655,8 +645,6 @@ async function decorateFeedFilter(articleFeedEl) {
   const selectedCategories = document.createElement('span');
   selectedCategories.classList.add('selected-filters');
 
-  const filterAnnouncer = createTag('span', { class: 'filter-announcer sr-only' });
-
   const clearBtn = document.createElement('a');
   clearBtn.classList.add('button', 'small', 'clear');
   clearBtn.href = '#';
@@ -674,7 +662,7 @@ async function decorateFeedFilter(articleFeedEl) {
   });
 
   selectedWrapper.append(selectedText, selectedCategories, clearBtn);
-  selectedContainer.append(selectedWrapper, filterAnnouncer);
+  selectedContainer.append(selectedWrapper);
   parent.parentElement.insertBefore(selectedContainer, parent);
 }
 
