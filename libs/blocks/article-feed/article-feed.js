@@ -263,7 +263,6 @@ function clearFilter(e, block) {
   const checked = document
     .querySelector(`input[name='${target.textContent}']`);
   if (checked) { checked.checked = false; }
-  checked.setAttribute('aria-label', `Removed ${target.textContent} filter`);
   delete blogIndex.config.selectedProducts;
   delete blogIndex.config.selectedIndustries;
   // eslint-disable-next-line no-use-before-define
@@ -632,7 +631,11 @@ async function decorateFeedFilter(articleFeedEl) {
   parent.parentElement.insertBefore(filterContainer, parent);
 
   // SELECTED CONTAINER
-  const selectedContainer = createTag('div', { class: 'selected-container hide' });
+  const selectedContainer = createTag('div', {
+    class: 'selected-container hide',
+    'aria-live': 'polite',
+    'aria-atomic': 'true',
+  });
   const selectedWrapper = createTag('div');
 
   const selectedText = document.createElement('p');
