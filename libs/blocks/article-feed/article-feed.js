@@ -318,7 +318,11 @@ function applyCurrentFilters(block, close) {
     });
     selectedContainer.classList.remove('hide');
   } else {
-    selectedContainer.textContent = 'filters removed';
+    const ariaLive = document.querySelector('.article-feed .sr-only[aria-live]');
+    if (ariaLive) {
+      ariaLive.textContent = '';
+      setTimeout(() => { ariaLive.textContent = 'filters removed'; }, 100);
+    }
     selectedContainer.classList.add('hide');
   }
   if (block) {
@@ -631,12 +635,16 @@ async function decorateFeedFilter(articleFeedEl) {
 
   parent.parentElement.insertBefore(filterContainer, parent);
 
-  // SELECTED CONTAINER
-  const selectedContainer = createTag('div', {
-    class: 'selected-container hide',
-    'aria-live': 'assertive',
-    'aria-atomic': 'true',
+  // ARIA LIVE CONTAINER for screen reader announcements
+  const ariaLiveContainer = createTag('div', {
+    class: 'sr-only',
+    'aria-live': 'polite',
+    role: 'status',
   });
+  parent.parentElement.insertBefore(ariaLiveContainer, parent);
+
+  // SELECTED CONTAINER
+  const selectedContainer = createTag('div', { class: 'selected-container hide' });
   const selectedWrapper = createTag('div');
 
   const selectedText = document.createElement('p');
