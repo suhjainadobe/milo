@@ -344,6 +344,8 @@ async function clearFilters(e, block) {
   let target = document;
   if (type === 'reset') {
     target = e.target.parentNode.parentNode;
+    console.log('target', target);
+    // change here
     announceFilterChange(`${target.textContent} ${await replacePlaceholder('reset')}`);
   }
   const dropdowns = target.querySelectorAll('.filter-options');
