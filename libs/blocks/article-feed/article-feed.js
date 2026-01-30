@@ -675,7 +675,7 @@ async function decorateFeedFilter(articleFeedEl) {
   });
 
   const ariaLive = createTag('div', {
-    class: 'aria-live-container',
+    class: 'aria-live-container sr-only',
     'aria-live': 'polite',
   });
 
