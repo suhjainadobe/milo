@@ -259,7 +259,7 @@ function buildSelectedFilter(name) {
 }
 
 function announceFilterChange(message) {
-  const ariaLive = document.querySelector('.aria-live-container');
+  const ariaLive = document.querySelector('.article-feed-live-container');
   if (ariaLive) {
     ariaLive.textContent = '';
     requestAnimationFrame(() => {
@@ -678,7 +678,7 @@ async function decorateFeedFilter(articleFeedEl) {
   });
 
   const ariaLive = createTag('div', {
-    class: 'aria-live-container sr-only',
+    class: 'article-feed-live-container',
     'aria-live': 'polite',
   });
 
