@@ -346,7 +346,7 @@ async function clearFilters(e, block) {
     target = e.target.parentNode.parentNode;
     console.log('target', target.getAttribute('id'));
     // change here
-    announceFilterChange(`${target.textContent} ${await replacePlaceholder('reset')}`);
+    announceFilterChange(`${await replacePlaceholder('reset')} ${target.getAttribute('id')}`);
   }
   const dropdowns = target.querySelectorAll('.filter-options');
   let hadFilters = false;
