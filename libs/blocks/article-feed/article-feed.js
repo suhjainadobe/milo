@@ -339,11 +339,12 @@ function applyCurrentFilters(block, close) {
   }
 }
 
-function clearFilters(e, block) {
+async function clearFilters(e, block) {
   const type = e.target.classList[e.target.classList.length - 1];
   let target = document;
   if (type === 'reset') {
     target = e.target.parentNode.parentNode;
+    announceFilterChange(`${target.textContent} ${await replacePlaceholder('reset')}`);
   }
   const dropdowns = target.querySelectorAll('.filter-options');
   let hadFilters = false;
