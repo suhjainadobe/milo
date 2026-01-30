@@ -344,7 +344,7 @@ async function clearFilters(e, block) {
   let target = document;
   if (type === 'reset') {
     target = e.target.parentNode.parentNode;
-    console.log('target', target);
+    console.log('target', target.getAttribute('id'));
     // change here
     announceFilterChange(`${target.textContent} ${await replacePlaceholder('reset')}`);
   }
