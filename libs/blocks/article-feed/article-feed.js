@@ -263,6 +263,7 @@ function clearFilter(e, block) {
   const checked = document
     .querySelector(`input[name='${target.textContent}']`);
   if (checked) { checked.checked = false; }
+  checked.setAttribute('aria-label', `Removed ${target.textContent} filter`);
   delete blogIndex.config.selectedProducts;
   delete blogIndex.config.selectedIndustries;
   // eslint-disable-next-line no-use-before-define
@@ -318,17 +319,7 @@ function applyCurrentFilters(block, close) {
     });
     selectedContainer.classList.remove('hide');
   } else {
-    const ariaLive = document.querySelector('.article-feed .sr-only[aria-live]');
-    if (ariaLive) {
-      ariaLive.textContent = '';
-      setTimeout(() => { ariaLive.textContent = 'filters removed'; }, 100);
-    }
     selectedContainer.classList.add('hide');
-    const articleFeed = document.querySelector('.article-feed');
-    if (articleFeed) {
-      articleFeed.setAttribute('tabindex', '-1');
-      articleFeed.focus();
-    }
   }
   if (block) {
     block.innerHTML = '';
@@ -639,14 +630,6 @@ async function decorateFeedFilter(articleFeedEl) {
   filterContainer.append(filterWrapper);
 
   parent.parentElement.insertBefore(filterContainer, parent);
-
-  // ARIA LIVE CONTAINER for screen reader announcements
-  const ariaLiveContainer = createTag('div', {
-    class: 'sr-only',
-    'aria-live': 'polite',
-    role: 'status',
-  });
-  parent.parentElement.insertBefore(ariaLiveContainer, parent);
 
   // SELECTED CONTAINER
   const selectedContainer = createTag('div', { class: 'selected-container hide' });
