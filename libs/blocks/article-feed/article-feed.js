@@ -680,7 +680,8 @@ async function decorateFeedFilter(articleFeedEl) {
 
   const ariaLive = createTag('div', {
     class: 'article-feed-live-container',
-    'aria-live': 'polite',
+    'aria-live': 'assertive',
+    'aria-atomic': 'true',
   });
 
   selectedWrapper.append(selectedText, selectedCategories, clearBtn);
