@@ -259,16 +259,15 @@ function buildSelectedFilter(name) {
 }
 
 function announceFilterChange(message) {
-  const old = document.querySelector('.article-feed-live-container');
-  if (old) old.remove();
+  const ariaLive = document.querySelector('.article-feed-live-container');
+  if (!ariaLive) return;
 
-  const ariaLive = document.createElement('div');
-  ariaLive.className = 'article-feed-live-container';
-  ariaLive.setAttribute('aria-live', 'assertive');
-  ariaLive.setAttribute('aria-atomic', 'true');
-  ariaLive.textContent = message;
+  // Force a mutation VoiceOver will respect
+  ariaLive.textContent = '';
 
-  document.querySelector('.article-feed').before(ariaLive);
+  setTimeout(() => {
+    ariaLive.textContent = message;
+  }, 50);
 }
 
 function clearFilter(e, block) {
@@ -683,7 +682,8 @@ async function decorateFeedFilter(articleFeedEl) {
 
   const ariaLive = createTag('div', {
     class: 'article-feed-live-container',
-    'aria-live': 'assertive',
+    role: 'status',
+    'aria-live': 'polite',
     'aria-atomic': 'true',
   });
 
