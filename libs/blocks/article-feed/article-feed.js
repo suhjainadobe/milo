@@ -259,13 +259,16 @@ function buildSelectedFilter(name) {
 }
 
 function announceFilterChange(message) {
-  const ariaLive = document.querySelector('.article-feed-live-container');
-  if (ariaLive) {
-    ariaLive.textContent = '';
-    requestAnimationFrame(() => {
-      ariaLive.textContent = message;
-    });
-  }
+  const old = document.querySelector('.article-feed-live-container');
+  if (old) old.remove();
+
+  const ariaLive = document.createElement('div');
+  ariaLive.className = 'article-feed-live-container';
+  ariaLive.setAttribute('aria-live', 'assertive');
+  ariaLive.setAttribute('aria-atomic', 'true');
+  ariaLive.textContent = message;
+
+  document.querySelector('.article-feed').before(ariaLive);
 }
 
 function clearFilter(e, block) {
@@ -563,9 +566,9 @@ async function decorateArticleFeed(
 
   const container = createTag('div', {
     class: 'article-cards-empty',
-    role: 'alert',
-    'aria-live': 'assertive',
-    'aria-atomic': 'true',
+    // role: 'alert',
+    // 'aria-live': 'assertive',
+    // 'aria-atomic': 'true',
   });
 
   // display spinner
