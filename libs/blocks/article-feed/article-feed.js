@@ -335,24 +335,9 @@ function applyCurrentFilters(block, close) {
     selectedContainer.classList.add('hide');
   }
   if (block) {
-  // Preserve focus before DOM destruction
-    const { activeElement } = document;
-
     block.innerHTML = '';
     // eslint-disable-next-line no-use-before-define
     decorateArticleFeed(block);
-
-    // Restore focus AFTER repaint
-    requestAnimationFrame(() => {
-      if (activeElement && document.contains(activeElement)) {
-        activeElement.focus();
-      } else {
-        const feed = document.querySelector('.article-feed');
-        if (!feed) return;
-        feed.setAttribute('tabindex', '-1');
-        feed.focus();
-      }
-    });
   }
 }
 
@@ -712,6 +697,7 @@ export default async function init(el) {
   const initArticleFeed = async () => {
     blogIndex.config = readBlockConfig(el);
     el.innerHTML = '';
+    el.setAttribute('tabindex', '-1');
     await loadTaxonomy();
     if (blogIndex.config.filters) {
       decorateFeedFilter(el);
