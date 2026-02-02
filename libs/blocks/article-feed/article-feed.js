@@ -611,6 +611,7 @@ async function decorateArticleFeed(
     userHelp.classList.add('article-cards-empty-filtered');
     userHelp.textContent = await replacePlaceholder('user-help');
     container.append(noMatches, userHelp);
+    console.log('text changed');
     announceFilterChange(noMatchesText);
   } else {
     // no results were found
@@ -620,6 +621,7 @@ async function decorateArticleFeed(
     noResults.innerHTML = `<strong>${noResultsText}</strong>`;
     container.append(noResults);
     // Use the live region to ensure VoiceOver re-announces on repeated filter changes
+    console.log('text changed1');
     announceFilterChange(noResultsText);
   }
   const max = pageEnd > articles.length ? articles.length : pageEnd;
