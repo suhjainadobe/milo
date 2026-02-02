@@ -261,13 +261,10 @@ function buildSelectedFilter(name) {
 function announceFilterChange(message) {
   const ariaLive = document.querySelector('.article-feed-live-container');
   if (!ariaLive) return;
-
-  // Force a mutation VoiceOver will respect
   ariaLive.textContent = '';
-
   setTimeout(() => {
-    ariaLive.textContent = message;
-  }, 50);
+    ariaLive.textContent = `${message}\u200B`;
+  }, 100);
 }
 
 function clearFilter(e, block) {
@@ -697,7 +694,6 @@ export default async function init(el) {
   const initArticleFeed = async () => {
     blogIndex.config = readBlockConfig(el);
     el.innerHTML = '';
-    el.setAttribute('tabindex', '-1');
     await loadTaxonomy();
     if (blogIndex.config.filters) {
       decorateFeedFilter(el);
