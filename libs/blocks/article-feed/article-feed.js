@@ -310,7 +310,6 @@ function applyCurrentFilters(block, close) {
       const id = filter.parentElement.getAttribute('aria-labelledby');
       const dropdown = document.getElementById(id);
       closeMenu(dropdown);
-      dropdown.focus();
     }
   });
   const selectedContainer = document.querySelector('.selected-container');
@@ -498,6 +497,7 @@ async function buildFilter(type, tax, block, config) {
     closeCurtain();
     disableSearch(`${type}-filter-button`);
     applyCurrentFilters(block, config, 'close');
+    button.focus();
   });
 
   footer.append(resetBtn, applyBtn);
