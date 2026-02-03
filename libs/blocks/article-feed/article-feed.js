@@ -258,36 +258,17 @@ function buildSelectedFilter(name) {
   return a;
 }
 
-function announceFilterChange(message, assertive = false) {
+function announceFilterChange(message) {
   const ariaLive = document.querySelector('.article-feed-live-container');
   if (ariaLive) {
-    // Store original aria-live value
-    const originalAriaLive = ariaLive.getAttribute('aria-live') || 'polite';
-
-    // Temporarily change to assertive for important announcements
-    if (assertive && originalAriaLive !== 'assertive') {
-      ariaLive.setAttribute('aria-live', 'assertive');
-    }
-
-    // Clear the content first to ensure change detection
+    // Clear first to ensure the change is detected
     ariaLive.textContent = '';
-
-    // Use requestAnimationFrame to batch DOM updates and avoid reflows
+    // Use requestAnimationFrame to ensure DOM is ready
     requestAnimationFrame(() => {
-      // Add a zero-width space first, then the message to force change detection
-      // This ensures screen readers detect the change even if message is identical
-      ariaLive.textContent = '\u200B'; // Zero-width space
-      requestAnimationFrame(() => {
-        ariaLive.textContent = message;
-
-        setTimeout(() => {
-          ariaLive.textContent = '';
-          // Restore original aria-live value if we changed it
-          if (assertive && originalAriaLive !== 'assertive') {
-            ariaLive.setAttribute('aria-live', originalAriaLive);
-          }
-        }, 1000);
-      });
+      ariaLive.textContent = message;
+      setTimeout(() => {
+        ariaLive.textContent = '';
+      }, 1000);
     });
   }
 }
@@ -329,6 +310,7 @@ function applyCurrentFilters(block, close) {
       const id = filter.parentElement.getAttribute('aria-labelledby');
       const dropdown = document.getElementById(id);
       closeMenu(dropdown);
+      dropdown.focus();
     }
   });
   const selectedContainer = document.querySelector('.selected-container');
@@ -639,7 +621,7 @@ async function decorateArticleFeed(
     console.log('text changed');
     // Announce the full message with assertive priority
     const fullMessage = `${noMatchesText}. ${userHelpText}`;
-    announceFilterChange(fullMessage, true);
+    announceFilterChange(fullMessage);
   } else {
     // no results were found
     spinner.remove();
@@ -726,7 +708,7 @@ async function decorateFeedFilter(articleFeedEl) {
   const ariaLive = createTag('div', {
     class: 'article-feed-live-container',
     role: 'status',
-    'aria-live': 'polite',
+    'aria-live': 'assertive',
     'aria-atomic': 'true',
   });
 
