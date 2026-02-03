@@ -258,13 +258,26 @@ function buildSelectedFilter(name) {
   return a;
 }
 
-function announceFilterChange(message) {
+function announceFilterChange(message, assertive = false) {
   const ariaLive = document.querySelector('.article-feed-live-container');
   if (ariaLive) {
-    ariaLive.textContent = message;
-    setTimeout(() => {
-      ariaLive.textContent = '';
-    }, 1000);
+    // Temporarily change to assertive for important announcements
+    if (assertive) {
+      ariaLive.setAttribute('aria-live', 'assertive');
+    }
+    // Clear first to ensure the change is detected
+    ariaLive.textContent = '';
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      ariaLive.textContent = message;
+      setTimeout(() => {
+        ariaLive.textContent = '';
+        // Restore polite if we changed it
+        if (assertive) {
+          ariaLive.setAttribute('aria-live', 'polite');
+        }
+      }, 1000);
+    });
   }
 }
 
@@ -609,10 +622,13 @@ async function decorateArticleFeed(
     noMatches.innerHTML = `<strong>${noMatchesText}</strong>`;
     const userHelp = document.createElement('p');
     userHelp.classList.add('article-cards-empty-filtered');
-    userHelp.textContent = await replacePlaceholder('user-help');
+    const userHelpText = await replacePlaceholder('user-help');
+    userHelp.textContent = userHelpText;
     container.append(noMatches, userHelp);
     console.log('text changed');
-    announceFilterChange(noMatchesText);
+    // Announce the full message with assertive priority
+    const fullMessage = `${noMatchesText}. ${userHelpText}`;
+    announceFilterChange(fullMessage, true);
   } else {
     // no results were found
     spinner.remove();
