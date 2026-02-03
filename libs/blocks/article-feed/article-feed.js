@@ -261,22 +261,33 @@ function buildSelectedFilter(name) {
 function announceFilterChange(message, assertive = false) {
   const ariaLive = document.querySelector('.article-feed-live-container');
   if (ariaLive) {
+    // Store original aria-live value
+    const originalAriaLive = ariaLive.getAttribute('aria-live') || 'polite';
+
     // Temporarily change to assertive for important announcements
-    if (assertive) {
+    if (assertive && originalAriaLive !== 'assertive') {
       ariaLive.setAttribute('aria-live', 'assertive');
     }
-    // Clear first to ensure the change is detected
+
+    // Clear the content first to ensure change detection
     ariaLive.textContent = '';
-    // Use requestAnimationFrame to ensure DOM is ready
+
+    // Use requestAnimationFrame to batch DOM updates and avoid reflows
     requestAnimationFrame(() => {
-      ariaLive.textContent = message;
-      setTimeout(() => {
-        ariaLive.textContent = '';
-        // Restore polite if we changed it
-        if (assertive) {
-          ariaLive.setAttribute('aria-live', 'polite');
-        }
-      }, 1000);
+      // Add a zero-width space first, then the message to force change detection
+      // This ensures screen readers detect the change even if message is identical
+      ariaLive.textContent = '\u200B'; // Zero-width space
+      requestAnimationFrame(() => {
+        ariaLive.textContent = message;
+
+        setTimeout(() => {
+          ariaLive.textContent = '';
+          // Restore original aria-live value if we changed it
+          if (assertive && originalAriaLive !== 'assertive') {
+            ariaLive.setAttribute('aria-live', originalAriaLive);
+          }
+        }, 1000);
+      });
     });
   }
 }
