@@ -258,19 +258,28 @@ function buildSelectedFilter(name) {
   return a;
 }
 
+function ensureLiveRegion() {
+  const ariaLive = createTag('div', {
+    class: 'article-feed-live-container',
+    role: 'status',
+    'aria-live': 'assertive',
+    'aria-atomic': 'true',
+  });
+  document.body.appendChild(ariaLive);
+  return ariaLive;
+}
+
 function announceFilterChange(message) {
-  const ariaLive = document.querySelector('.article-feed-live-container');
-  if (ariaLive) {
-    // Clear first to ensure the change is detected
-    ariaLive.textContent = '';
-    // Use requestAnimationFrame to ensure DOM is ready
-    requestAnimationFrame(() => {
-      ariaLive.textContent = message;
-      setTimeout(() => {
-        ariaLive.textContent = '';
-      }, 1000);
-    });
-  }
+  const ariaLive = ensureLiveRegion();
+  // Clear first to ensure the change is detected
+  ariaLive.textContent = '';
+  // Use requestAnimationFrame to ensure DOM is ready
+  requestAnimationFrame(() => {
+    ariaLive.textContent = message;
+    setTimeout(() => {
+      ariaLive.textContent = '';
+    }, 1000);
+  });
 }
 
 function clearFilter(e, block) {
@@ -337,19 +346,22 @@ function applyCurrentFilters(block, close) {
   } else {
     selectedContainer.classList.add('hide');
     // Move focus when filters are cleared
-    const filterContainer = document.querySelector('.filter-container');
-    const firstFilterButton = filterContainer?.querySelector('.filter-button');
-    if (firstFilterButton) {
-      firstFilterButton.focus();
-    } else {
-      // Fallback to article feed container
-      const articleFeed = document.querySelector('.article-feed');
-      if (articleFeed) {
-        articleFeed.setAttribute('tabindex', '-1');
-        articleFeed.focus();
-        articleFeed.removeAttribute('tabindex');
+    // Delay focus movement to allow VoiceOver to finish announcing live region changes
+    setTimeout(() => {
+      const filterContainer = document.querySelector('.filter-container');
+      const firstFilterButton = filterContainer?.querySelector('.filter-button');
+      if (firstFilterButton) {
+        firstFilterButton.focus();
+      } else {
+        // Fallback to article feed container
+        const articleFeed = document.querySelector('.article-feed');
+        if (articleFeed) {
+          articleFeed.setAttribute('tabindex', '-1');
+          articleFeed.focus();
+          articleFeed.removeAttribute('tabindex');
+        }
       }
-    }
+    }, 300);
   }
   if (block) {
     block.innerHTML = '';
@@ -704,20 +716,14 @@ async function decorateFeedFilter(articleFeedEl) {
     }
   });
 
-  const ariaLive = createTag('div', {
-    class: 'article-feed-live-container',
-    role: 'status',
-    'aria-live': 'assertive',
-    'aria-atomic': 'true',
-  });
-
   selectedWrapper.append(selectedText, selectedCategories, clearBtn);
   selectedContainer.append(selectedWrapper);
   parent.parentElement.insertBefore(selectedContainer, parent);
-  parent.parentElement.insertBefore(ariaLive, parent);
 }
 
 export default async function init(el) {
+  ensureLiveRegion();
+
   const initArticleFeed = async () => {
     blogIndex.config = readBlockConfig(el);
     el.innerHTML = '';
