@@ -270,16 +270,20 @@ function ensureLiveRegion() {
 }
 
 function announceFilterChange(message) {
-  const ariaLive = ensureLiveRegion();
-  // Clear first to ensure the change is detected
+  const ariaLive = document.querySelector('.article-feed-live-container');
+  if (!ariaLive || !message) return;
+  let announceTimeout;
+  // Cancel any pending announcement
+  clearTimeout(announceTimeout);
+
+  // Remove previous message
   ariaLive.textContent = '';
-  // Use requestAnimationFrame to ensure DOM is ready
-  requestAnimationFrame(() => {
-    ariaLive.textContent = message;
-    setTimeout(() => {
-      ariaLive.textContent = '';
-    }, 1000);
-  });
+
+  announceTimeout = setTimeout(() => {
+    const msg = document.createElement('div');
+    msg.textContent = message;
+    ariaLive.appendChild(msg);
+  }, 100);
 }
 
 function clearFilter(e, block) {
