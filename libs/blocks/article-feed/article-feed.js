@@ -497,7 +497,6 @@ async function buildFilter(type, tax, block, config) {
     closeCurtain();
     disableSearch(`${type}-filter-button`);
     applyCurrentFilters(block, config, 'close');
-    button.focus();
   });
 
   footer.append(resetBtn, applyBtn);
