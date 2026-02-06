@@ -621,9 +621,9 @@ async function decorateArticleFeed(
     const userHelpText = await replacePlaceholder('user-help');
     userHelp.textContent = userHelpText;
     container.append(noMatches, userHelp);
-    console.log('text changed');
     // Announce the full message with assertive priority
     const fullMessage = `${noMatchesText}. ${userHelpText}`;
+    container.focus();
     announceFilterChange(fullMessage);
   } else {
     // no results were found
@@ -632,8 +632,8 @@ async function decorateArticleFeed(
     const noResults = document.createElement('p');
     noResults.innerHTML = `<strong>${noResultsText}</strong>`;
     container.append(noResults);
+    container.focus();
     // Use the live region to ensure VoiceOver re-announces on repeated filter changes
-    console.log('text changed1');
     announceFilterChange(noResultsText);
   }
   const max = pageEnd > articles.length ? articles.length : pageEnd;
