@@ -260,19 +260,12 @@ function buildSelectedFilter(name) {
 
 function announceFilterChange(message) {
   const ariaLive = document.querySelector('.article-feed-live-container');
-  if (!ariaLive || !message) return;
-  let announceTimeout;
-  // Cancel any pending announcement
-  clearTimeout(announceTimeout);
-
-  // Remove previous message
-  ariaLive.textContent = '';
-
-  announceTimeout = setTimeout(() => {
-    const msg = document.createElement('div');
-    msg.textContent = message;
-    ariaLive.appendChild(msg);
-  }, 100);
+  if (ariaLive) {
+    ariaLive.textContent = '';
+    requestAnimationFrame(() => {
+      ariaLive.textContent = message;
+    });
+  }
 }
 
 function clearFilter(e, block) {
@@ -597,7 +590,7 @@ async function decorateArticleFeed(
     class: 'spinner',
     role: 'status',
     'aria-live': 'assertive',
-    'aria-label': 'Loading articles',
+    'aria-label': 'loading',
     'aria-atomic': 'true',
   });
   container.append(spinner);
@@ -632,7 +625,6 @@ async function decorateArticleFeed(
     const noResults = document.createElement('p');
     noResults.innerHTML = `<strong>${noResultsText}</strong>`;
     container.append(noResults);
-    container.focus();
     // Use the live region to ensure VoiceOver re-announces on repeated filter changes
     announceFilterChange(noResultsText);
   }
@@ -710,9 +702,7 @@ async function decorateFeedFilter(articleFeedEl) {
 
   const ariaLive = createTag('div', {
     class: 'article-feed-live-container',
-    role: 'status',
-    'aria-live': 'assertive',
-    'aria-atomic': 'true',
+    'aria-live': 'polite',
   });
 
   selectedWrapper.append(selectedText, selectedCategories, clearBtn);
