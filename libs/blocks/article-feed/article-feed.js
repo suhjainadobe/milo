@@ -348,7 +348,7 @@ function applyCurrentFilters(block, close) {
           articleFeed.removeAttribute('tabindex');
         }
       }
-    }, 300);
+    }, 500);
   }
   if (block) {
     block.innerHTML = '';
