@@ -348,7 +348,7 @@ function applyCurrentFilters(block, close) {
           articleFeed.removeAttribute('tabindex');
         }
       }
-    }, 500);
+    }, 300);
   }
   if (block) {
     block.innerHTML = '';
@@ -591,7 +591,7 @@ async function decorateArticleFeed(
     'aria-atomic': 'true',
   });
   container.append(spinner);
-  // articleCards.append(container);
+  articleCards.append(container);
 
   const pageEnd = offset + limit;
   await filterArticles(feed, limit, offset);
@@ -602,7 +602,6 @@ async function decorateArticleFeed(
     container.remove();
   } else if (blogIndex.config.selectedProducts || blogIndex.config.selectedIndustries) {
     // no user filtered results were found
-    container.remove();
     spinner.remove();
     const noMatchesText = await replacePlaceholder('no-matches');
     const noMatches = document.createElement('p');
@@ -611,11 +610,9 @@ async function decorateArticleFeed(
     userHelp.classList.add('article-cards-empty-filtered');
     const userHelpText = await replacePlaceholder('user-help');
     userHelp.textContent = userHelpText;
-    // container.setAttribute('tabindex', '-1');
+    container.setAttribute('tabindex', '-1');
     container.append(noMatches, userHelp);
-    console.log('inserted');
-    articleCards.append(container);
-    // container.focus();
+    container.focus();
     // Announce the full message with assertive priority
     const fullMessage = `${noMatchesText}. ${userHelpText}`;
 
@@ -623,12 +620,10 @@ async function decorateArticleFeed(
   } else {
     // no results were found
     spinner.remove();
-    container.remove();
     const noResultsText = await replacePlaceholder('no-results');
     const noResults = document.createElement('p');
     noResults.innerHTML = `<strong>${noResultsText}</strong>`;
     container.append(noResults);
-    articleCards.append(container);
     // Use the live region to ensure VoiceOver re-announces on repeated filter changes
     announceFilterChange(noResultsText);
   }
