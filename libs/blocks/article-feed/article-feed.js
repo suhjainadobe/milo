@@ -610,7 +610,9 @@ async function decorateArticleFeed(
     userHelp.classList.add('article-cards-empty-filtered');
     const userHelpText = await replacePlaceholder('user-help');
     userHelp.textContent = userHelpText;
+    container.setAttribute('tabindex', '-1');
     container.append(noMatches, userHelp);
+    container.focus();
     // Announce the full message with assertive priority
     const fullMessage = `${noMatchesText}. ${userHelpText}`;
 
