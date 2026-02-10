@@ -261,10 +261,7 @@ function buildSelectedFilter(name) {
 function announceFilterChange(message) {
   const ariaLive = document.querySelector('.article-feed-live-container');
   if (ariaLive) {
-    ariaLive.textContent = '';
-    requestAnimationFrame(() => {
-      ariaLive.textContent = message;
-    });
+    ariaLive.replaceChildren(document.createTextNode(message));
   }
 }
 
@@ -697,8 +694,7 @@ async function decorateFeedFilter(articleFeedEl) {
 
   const ariaLive = createTag('div', {
     class: 'article-feed-live-container',
-    role: 'status',
-    'aria-live': 'assertive',
+    role: 'alert',
     'aria-atomic': 'true',
   });
 
