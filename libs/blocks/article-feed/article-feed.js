@@ -613,6 +613,7 @@ async function decorateArticleFeed(
     userHelp.textContent = userHelpText;
     // container.setAttribute('tabindex', '-1');
     container.append(noMatches, userHelp);
+    console.log('inserted');
     articleCards.append(container);
     // container.focus();
     // Announce the full message with assertive priority
