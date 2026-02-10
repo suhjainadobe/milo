@@ -260,9 +260,14 @@ function buildSelectedFilter(name) {
 
 function announceFilterChange(message) {
   const ariaLive = document.querySelector('.article-feed-live-container');
-  if (ariaLive) {
-    ariaLive.replaceChildren(document.createTextNode(message));
-  }
+  if (ariaLive) ariaLive.remove();
+
+  const alert = document.createElement('div');
+  alert.class = 'article-feed-live-container';
+  alert.setAttribute('role', 'alert');
+  alert.textContent = message;
+
+  document.body.appendChild(alert);
 }
 
 function clearFilter(e, block) {
@@ -692,16 +697,17 @@ async function decorateFeedFilter(articleFeedEl) {
     }
   });
 
-  const ariaLive = createTag('div', {
-    class: 'article-feed-live-container',
-    role: 'alert',
-    'aria-atomic': 'true',
-  });
+  // const ariaLive = createTag('div', {
+  //   class: 'article-feed-live-container',
+  //   role: 'alert',
+  //   'aria-atomic': 'true',
+  // });
 
   selectedWrapper.append(selectedText, selectedCategories, clearBtn);
   selectedContainer.append(selectedWrapper);
   parent.parentElement.insertBefore(selectedContainer, parent);
-  parent.parentElement.insertBefore(ariaLive, parent);
+  // parent.parentElement.insertBefore(ariaLive, parent);
+  // document.body.appendChild(ariaLive);
 }
 
 export default async function init(el) {
