@@ -580,7 +580,7 @@ async function decorateArticleFeed(
 
   const container = createTag('div', {
     class: 'article-cards-empty',
-    role: 'status',
+    role: 'alert',
     'aria-live': 'assertive',
     'aria-atomic': 'true',
   });
@@ -588,7 +588,7 @@ async function decorateArticleFeed(
   // display spinner
   const spinner = createTag('div', {
     class: 'spinner',
-    role: 'status',
+    role: 'alert',
     'aria-live': 'assertive',
     'aria-label': 'loading',
     'aria-atomic': 'true',
