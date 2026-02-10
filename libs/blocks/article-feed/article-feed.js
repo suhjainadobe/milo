@@ -580,8 +580,8 @@ async function decorateArticleFeed(
 
   const container = createTag('div', {
     class: 'article-cards-empty',
-    role: 'alert',
-    'aria-live': 'assertive',
+    role: 'status',
+    'aria-live': 'polite',
     'aria-atomic': 'true',
   });
 
@@ -605,6 +605,7 @@ async function decorateArticleFeed(
     container.remove();
   } else if (blogIndex.config.selectedProducts || blogIndex.config.selectedIndustries) {
     // no user filtered results were found
+    console.log('no user filtered results were found');
     spinner.remove();
     const noMatchesText = await replacePlaceholder('no-matches');
     const noMatches = document.createElement('p');
@@ -614,19 +615,14 @@ async function decorateArticleFeed(
     const userHelpText = await replacePlaceholder('user-help');
     userHelp.textContent = userHelpText;
     container.append(noMatches, userHelp);
-    // Announce the full message with assertive priority
-    const fullMessage = `${noMatchesText}. ${userHelpText}`;
-    container.focus();
-    announceFilterChange(fullMessage);
   } else {
     // no results were found
+    console.log('no results were found');
     spinner.remove();
     const noResultsText = await replacePlaceholder('no-results');
     const noResults = document.createElement('p');
     noResults.innerHTML = `<strong>${noResultsText}</strong>`;
     container.append(noResults);
-    // Use the live region to ensure VoiceOver re-announces on repeated filter changes
-    announceFilterChange(noResultsText);
   }
   const max = pageEnd > articles.length ? articles.length : pageEnd;
   for (let i = offset; i < max; i += 1) {
