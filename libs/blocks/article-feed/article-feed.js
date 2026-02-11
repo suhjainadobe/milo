@@ -333,6 +333,24 @@ function applyCurrentFilters(block, close) {
     selectedContainer.classList.remove('hide');
   } else {
     selectedContainer.classList.add('hide');
+    // Move focus when filters are cleared only if no dropdown is expanded (e.g. Clear all).
+    setTimeout(() => {
+      const dropdownExpanded = document.querySelector('.filter-button[aria-expanded="true"]');
+      if (dropdownExpanded) return;
+
+      const filterContainer = document.querySelector('.filter-container');
+      const firstFilterButton = filterContainer?.querySelector('.filter-button');
+      if (firstFilterButton) {
+        firstFilterButton.focus();
+      } else {
+        const articleFeed = document.querySelector('.article-feed');
+        if (articleFeed) {
+          articleFeed.setAttribute('tabindex', '-1');
+          articleFeed.focus();
+          articleFeed.removeAttribute('tabindex');
+        }
+      }
+    }, 800);
   }
   if (block) {
     block.innerHTML = '';
