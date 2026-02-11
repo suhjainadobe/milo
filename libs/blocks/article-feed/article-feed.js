@@ -616,10 +616,7 @@ async function decorateArticleFeed(
     container.setAttribute('tabindex', '-1');
     container.append(noMatches, userHelp);
     container.focus();
-    // Announce the full message with assertive priority
-    const fullMessage = `${noMatchesText}. ${userHelpText}`;
-
-    announceFilterChange(fullMessage);
+    // Focus on the message container is sufficient; no live region needed (avoids double read on NVDA)
   } else {
     // no results were found
     spinner.remove();
