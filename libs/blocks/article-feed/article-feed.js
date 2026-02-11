@@ -262,11 +262,11 @@ function announceFilterChange(message) {
   const ariaLive = document.querySelector('.article-feed-live-container');
   if (ariaLive) ariaLive.remove();
 
-  const alert = document.createElement('div');
-  alert.class = 'article-feed-live-container';
-  alert.setAttribute('role', 'alert');
+  const alert = createTag('div', {
+    class: 'article-feed-live-container',
+    role: 'alert',
+  });
   alert.textContent = message;
-
   document.body.appendChild(alert);
 }
 
@@ -333,14 +333,17 @@ function applyCurrentFilters(block, close) {
     selectedContainer.classList.remove('hide');
   } else {
     selectedContainer.classList.add('hide');
-    // Move focus when filters are cleared
+    // Move focus when filters are cleared only if no dropdown is expanded (e.g. Clear all).
+    // When Reset is used inside an expanded dropdown, keep focus on the Reset button.
     setTimeout(() => {
+      const dropdownExpanded = document.querySelector('.filter-button[aria-expanded="true"]');
+      if (dropdownExpanded) return;
+
       const filterContainer = document.querySelector('.filter-container');
       const firstFilterButton = filterContainer?.querySelector('.filter-button');
       if (firstFilterButton) {
         firstFilterButton.focus();
       } else {
-        // Fallback to article feed container
         const articleFeed = document.querySelector('.article-feed');
         if (articleFeed) {
           articleFeed.setAttribute('tabindex', '-1');
@@ -699,17 +702,9 @@ async function decorateFeedFilter(articleFeedEl) {
     }
   });
 
-  // const ariaLive = createTag('div', {
-  //   class: 'article-feed-live-container',
-  //   role: 'alert',
-  //   'aria-atomic': 'true',
-  // });
-
   selectedWrapper.append(selectedText, selectedCategories, clearBtn);
   selectedContainer.append(selectedWrapper);
   parent.parentElement.insertBefore(selectedContainer, parent);
-  // parent.parentElement.insertBefore(ariaLive, parent);
-  // document.body.appendChild(ariaLive);
 }
 
 export default async function init(el) {
